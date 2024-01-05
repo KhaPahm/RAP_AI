@@ -1,6 +1,9 @@
 module.exports = {
     mysq: {
-        host: "",
-        password: ""
+        host: "localhost",
+        user: "root",
+        password: "root1234",
+        database: "rap_ai",
+        port: "3306"
     }
 }
