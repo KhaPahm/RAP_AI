@@ -7,7 +7,7 @@ module.exports = {
         port: "3306"
     },
     mySqlRds: {
-        host: "rap-ai.c7oqwugy2ays.ap-southeast-2.rds.amazonaws.com",
+        host: "database-1.c7oqwugy2ays.ap-southeast-2.rds.amazonaws.com",
         user: "admin",
         password: "DbpF5t4ePBSbCvpfa6On",
         database: "rap-ai",
