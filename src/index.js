@@ -11,7 +11,7 @@ const router = require(routerIndexPath);
 //Config enviroment variable
 dotenv.config();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 const app = express();
 
 app.use(express.json());
