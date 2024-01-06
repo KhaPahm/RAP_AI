@@ -140,9 +140,22 @@ CREATE TABLE History_Watch
 INSERT INTO role(role_name, role_description) VALUES ('admin', 'Quyền quản trị');
 INSERT INTO role(role_name, role_description) VALUES ('officer', 'Quyền của cán bộ quản lý');
 INSERT INTO role(role_name, role_description) VALUES ('user', 'Người dùng');
-select * from role;
-select * from user;
+
 #Insert user
 INSERT INTO User(user_name, password, email, day_of_birth, full_name, phone_number) 
 	VALUES ('rap_admin', '$2y$10$puQr8d.yG9oT1Tktj6MQ8OcyrMFkxVV5kXKjVQ813kn4T0G24cdNi', 'admin@rap-ai.asia', '2024-01-05', 'Admin', '9999999999');
 INSERT INTO user_role VALUES (1,1000);    
+
+#Insert menu
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("CRUD user", "/crud_user", "01");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("Red list", "/redList", "02");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("edit red list", "/editRedList", "03");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("add red list", "/addRedList", "04");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("report", "/report", "05");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("search", "/search", "05");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("history", "/history", "06");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("news", "/news", "07");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("review report", "/reviewReport", "08");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("accept report", "/acceptReport", "09");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("demiss report", "/demissReport", "10");
+INSERT INTO menu(menu_name, menu_path, pid) VALUES ("re-training", "/reTrainning", "11");
