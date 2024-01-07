@@ -14,12 +14,11 @@ module.exports = {
         const password = req.body.password;
 
         const userInfor = await userService.Login(userName, password);
+
         if(userInfor.totalResult == 1) {
-            const apiRespone = new ApiRespone(userInfor.totalResult, userInfor.userInfor);
-            res.json(apiRespone);
+            res.json(ApiRespone.Success(userInfor.totalResult, userInfor.userInfor));
         } else {
-            const apiRespone = new ApiRespone(userInfor.totalResult, userInfor.userInfor, 100, "Tên đăng nhập hoặc mật khẩu không đúng");
-            res.json(apiRespone);
+            res.json(ApiRespone.Err(100, "Tên đăng nhập hoặc mật khẩu không đúng"));
         }
     }
 }

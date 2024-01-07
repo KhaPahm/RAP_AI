@@ -1,6 +1,16 @@
-module.exports = (totalResult = 0, data = null, resultCode = 0, message = "Successful!") => {
-    this.resultCode = resultCode,
-    this.totalResult = totalResult,
-    this.data = data,
-    this.message = message
+module.exports = class ApiRespone {
+    constructor(totalResult = 0, data = null, resultCode = 0, message = "Successful!") {
+        this.resultCode = resultCode;
+        this.totalResult = totalResult;
+        this.data = data;
+        this.message = message;
+    }
+
+    static Success(totalResult, data) {
+        return new ApiRespone(totalResult, data, 0, "Successful")
+    }
+
+    static Err(resultCode = 0, message = "Successful!") {
+        return new ApiRespone(0, null, resultCode, message)
+    }
 }
