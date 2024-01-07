@@ -1,4 +1,4 @@
-const mySqlConfig = require("../../config/database.config").mysq;
+const mySqlConfig = require("../../config/database.config").mySqlRds;
 const mysql = require("mysql2/promise");
 const writeLog = require("../helpers/index.helpers");
 
