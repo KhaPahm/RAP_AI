@@ -13,17 +13,17 @@ module.exports = {
         const userName = req.body.userName;
         const password = req.body.password;
 
-        var userInfor = await userService.Login(userName, password);
-        console.log(userInfor);
+        const userInfor = await userService.Login(userName, password);
+        const respone = Object.create(ApiRespone);
         if(userInfor.totalResult == 1) {
-            ApiRespone.data = userInfor.userInfor;
-            ApiRespone.totalResult = userInfor.totalResult;
-            res.json(ApiRespone);
+            respone.data = userInfor.userInfor;
+            respone.totalResult = userInfor.totalResult;
+            res.json(respone);
         } else {
-            ApiRespone.resultCode = 100;
-            ApiRespone.totalResult = userInfor.totalResult;
-            ApiRespone.message = "Tên đăng nhập hoặc mật khẩu không đúng";
-            res.json(ApiRespone);
+            respone.resultCode = 100;
+            respone.totalResult = userInfor.totalResult;
+            respone.message = "Tên đăng nhập hoặc mật khẩu không đúng";
+            res.json(respone);
         }
     }
 }
