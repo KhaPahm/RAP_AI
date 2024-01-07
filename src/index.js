@@ -4,6 +4,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+var bodyParser = require('body-parser')
+
 
 const routerIndexPath = path.join(__dirname, "api", "routers", "index.routers.js");
 const router = require(routerIndexPath);
@@ -17,6 +19,8 @@ const app = express();
 app.use(express.json());
 
 app.use(express.urlencoded({extended:false}));
+
+app.use(bodyParser.json())
 
 app.use(session({
     secret: process.env.SESSION_SECRECT_KEY,

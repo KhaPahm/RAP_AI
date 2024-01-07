@@ -9,12 +9,11 @@ module.exports = {
             errorLogFile.write(errMsg);
         fs.close();
     },
-    WriteInforLog(msg) {
+    WriteInforLog(msgInfor) {
         const errorLogFile = fs.createWriteStream(path.join(__dirname, "..", "logs", "info.log"));
         var msg = "\n----------------------------------------------------\n"
-                + Date.now.toString() + "\n";
+                + Date.now.toString() + "\n" + msgInfor;
             errorLogFile.write(msg);
-        fs.close();
     },
 
 }
