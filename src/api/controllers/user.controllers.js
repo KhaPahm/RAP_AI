@@ -1,24 +1,19 @@
-const userService = require("../services/user.services");
-const StrHelpers = require("../helpers/string.helpers");
-var ApiRespone = require("../interfaces/api.respone.interfaces");
-const upload = require('multer')();
+import { GetAllUser as _GetAllUser, Login } from "../services/user.services.js";
+import APIRespone from "../interfaces/api.respone.interfaces.js";
+export async function GetAllUser(req, res) 
+{
+	var t = await _GetAllUser();
+	res.send(t.toString());
+}
+export async function LogIn(req, res) {
+	const userName = req.body.userName;
+	const password = req.body.password;
 
+	const userInfor = await Login(userName, password);
 
-module.exports = {
-    async GetAllUser(req, res, next) {
-        var t = await userService.GetAllUser();
-        res.send(t.toString());
-    },
-    async LogIn(req, res, next) {
-        const userName = req.body.userName;
-        const password = req.body.password;
-
-        const userInfor = await userService.Login(userName, password);
-
-        if(userInfor.totalResult == 1) {
-            res.json(ApiRespone.Success(userInfor.totalResult, userInfor.userInfor));
-        } else {
-            res.json(ApiRespone.Err(100, "Tên đăng nhập hoặc mật khẩu không đúng"));
-        }
-    }
+	if (userInfor != 1) {
+		res.json(APIRespone.Success(1, userInfor));
+	} else {
+		res.json(APIRespone.Err(100, "Tên đăng nhập hoặc mật khẩu không đúng"));
+	}
 }

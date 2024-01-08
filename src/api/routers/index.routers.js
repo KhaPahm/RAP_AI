@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const userRouter = require("./user.routers");
+import { Router } from "express";
+const router = Router();
+import userRouter from "./user.routers.js";
 
 
 router.use("/user", userRouter);
 router.use("/", (req, res) => {
-    res.send("This is API for RAP.")
+	res.send("This is API for RAP.");
 });
 
-module.exports = router;
+export default router;

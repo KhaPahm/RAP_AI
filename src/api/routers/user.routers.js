@@ -1,9 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const userControllers = require("../controllers/user.controllers");
-const upload = require('multer')();
+import { Router } from "express";
+import { GetAllUser, LogIn } from "../controllers/user.controllers.js";
+import Multer from "multer";
 
-router.get("/all", userControllers.GetAllUser);
-router.post("/login",upload.any(), userControllers.LogIn);
+const upload = Multer();
+const router = Router();
 
-module.exports = router;
+router.get("/all", GetAllUser);
+router.post("/login", upload.any(), LogIn);
+
+export default router;

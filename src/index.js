@@ -1,46 +1,41 @@
-const express = require("express");
-const path = require("path");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const session = require("express-session");
-const cookieParser = require("cookie-parser");
-var bodyParser = require('body-parser')
-
-
-const routerIndexPath = path.join(__dirname, "api", "routers", "index.routers.js");
-const router = require(routerIndexPath);
+import express, { json, urlencoded } from "express";
+import cors from "cors";
+import { config } from "dotenv";
+import session from "express-session";
+import cookieParser from "cookie-parser";
+import router from "./api/routers/index.routers.js";
 
 //Config enviroment variable
-dotenv.config();
+config();
 
+// eslint-disable-next-line no-undef
 const port = process.env.PORT;
 const app = express();
 
-app.use(express.json());
+app.use(json());
 
-app.use(express.urlencoded({extended:false}));
-
-app.use(bodyParser.json())
+app.use(urlencoded({extended:false}));
 
 app.use(session({
-    secret: process.env.SESSION_SECRECT_KEY,
-    resave: false,
-    saveUninitialized: true
-}))
+	// eslint-disable-next-line no-undef
+	secret: process.env.SESSION_SECRECT_KEY,
+	resave: false,
+	saveUninitialized: true
+}));
 
 app.use(cookieParser());
 
 app.use(cors({
-    credentials: true,
-    origin: true
-}))
+	credentials: true,
+	origin: true
+}));
 
 app.use("/", router);
 
 app.use((req, res) => {
-    res.status(404).send({url: req.originalUrl + " not found!"});
-})
+	res.status(404).send({url: req.originalUrl + " not found!"});
+});
 
 app.listen(port, () => {
-    console.log(`Server is running in port: ${port}`);
-})
+	console.log(`Server is running in port: ${port}`);
+});
