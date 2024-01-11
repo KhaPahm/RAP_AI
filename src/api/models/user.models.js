@@ -114,7 +114,9 @@ export class UserInfor {
 		const strQueryCheckUser = `SELECT * FROM User WHERE (user_name = "${userName}" OR email = "${email}") AND (otp <> "" OR otp <> null)`;
 		const result = await query(strQueryCheckUser);
 		if(result.length != 0) {
-			return new Result(ResultCode.Warning, "Tài khoản hoặc email đã tồn tại. Vui lòng thử lại!");
+			if(result[0].Status != "WT") {
+				return new Result(ResultCode.Warning, "Tài khoản hoặc email đã tồn tại. Vui lòng thử lại!");
+			}
 		}
 
 		const otp = Math.floor(Math.random() * 99999999).toString();
