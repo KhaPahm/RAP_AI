@@ -137,52 +137,53 @@ CREATE TABLE History_Watch
 
 #---------------------------------------------------------------
 #Insert role
-INSERT INTO Role(role_name, role_description) VALUES ('admin', 'Quyền quản trị');
-INSERT INTO Role(role_name, role_description) VALUES ('officer', 'Quyền của cán bộ quản lý');
-INSERT INTO Role(role_name, role_description) VALUES ('user', 'Người dùng');
+#INSERT INTO Role(role_name, role_description) VALUES ('admin', 'Quyền quản trị');
+#INSERT INTO Role(role_name, role_description) VALUES ('officer', 'Quyền của cán bộ quản lý');
+#INSERT INTO Role(role_name, role_description) VALUES ('user', 'Người dùng');
 
 #Insert user
-INSERT INTO User(user_name, password, email, day_of_birth, full_name, phone_number) 
-	VALUES ('rap_admin', '$2y$10$puQr8d.yG9oT1Tktj6MQ8OcyrMFkxVV5kXKjVQ813kn4T0G24cdNi', 'admin@rap-ai.asia', '2024-01-05', 'Admin', '9999999999');
-INSERT INTO user_role VALUES (1,1000);    
+#INSERT INTO User(user_name, password, email, day_of_birth, full_name, phone_number) 
+	#VALUES ('rap_admin', '$2y$10$puQr8d.yG9oT1Tktj6MQ8OcyrMFkxVV5kXKjVQ813kn4T0G24cdNi', 'admin@rap-ai.asia', '2024-01-05', 'Admin', '9999999999');
+#INSERT INTO user_role VALUES (1,1000);    
 
 #Insert menu
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("CRUD user", "/crud_user", "01");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("Red list", "/redList", "02");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("edit red list", "/editRedList", "03");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("add red list", "/addRedList", "04");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("report", "/report", "05");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("search", "/search", "05");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("history", "/history", "06");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("news", "/news", "07");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("review report", "/reviewReport", "08");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("accept report", "/acceptReport", "09");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("demiss report", "/demissReport", "10");
-INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("re-training", "/reTrainning", "11");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("CRUD user", "/crud_user", "01");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("Red list", "/redList", "02");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("edit red list", "/editRedList", "03");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("add red list", "/addRedList", "04");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("report", "/report", "05");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("search", "/search", "05");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("history", "/history", "06");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("news", "/news", "07");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("review report", "/reviewReport", "08");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("accept report", "/acceptReport", "09");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("demiss report", "/demissReport", "10");
+#INSERT INTO Menu(menu_name, menu_path, pid) VALUES ("re-training", "/reTrainning", "11");
 
 #SELECT * FROM User WHERE user_name = "admin" and user_id = 1000
 
-insert into Menu_Role(menu_id, role_id) values (1, 1);
-insert into Menu_Role(menu_id, role_id) values (2, 1);
-insert into Menu_Role(menu_id, role_id) values (3, 1);
-insert into Menu_Role(menu_id, role_id) values (4, 1);
-insert into Menu_Role(menu_id, role_id) values (5, 1);
-insert into Menu_Role(menu_id, role_id) values (6, 1);
-insert into Menu_Role(menu_id, role_id) values (7, 1);
-insert into Menu_Role(menu_id, role_id) values (8, 1);
-insert into Menu_Role(menu_id, role_id) values (9, 1);
-insert into Menu_Role(menu_id, role_id) values (10, 1);
-insert into Menu_Role(menu_id, role_id) values (11, 1);
-insert into Menu_Role(menu_id, role_id) values (12, 1);
+#insert into Menu_Role(menu_id, role_id) values (1, 1);
+#insert into Menu_Role(menu_id, role_id) values (2, 1);
+#insert into Menu_Role(menu_id, role_id) values (3, 1);
+#insert into Menu_Role(menu_id, role_id) values (4, 1);
+#insert into Menu_Role(menu_id, role_id) values (5, 1);
+#insert into Menu_Role(menu_id, role_id) values (6, 1);
+#insert into Menu_Role(menu_id, role_id) values (7, 1);
+#insert into Menu_Role(menu_id, role_id) values (8, 1);
+#insert into Menu_Role(menu_id, role_id) values (9, 1);
+#insert into Menu_Role(menu_id, role_id) values (10, 1);
+#insert into Menu_Role(menu_id, role_id) values (11, 1);
+#insert into Menu_Role(menu_id, role_id) values (12, 1);
 
-Select m.menu_id, m.menu_path, m.menu_name  from User u 
-	left join User_Role ur on u.user_id = ur.user_id
-    #left join Role r on ur.role_id = r.role_id
-    #left join Menu_Role ml on r.role_id = ml.role_id
-    #left join Menu m on ml.menu_id = m.menu_id
-where u.user_id = 1000 and u.status = "OK";
+#Select m.menu_id, m.menu_path, m.menu_name  from User u 
+#	left join User_Role ur on u.user_id = ur.user_id
+#   left join Role r on ur.role_id = r.role_id
+#    left join Menu_Role ml on r.role_id = ml.role_id
+#   left join Menu m on ml.menu_id = m.menu_id
+#where u.user_id = 1000 and u.status = "OK" and m.status = "OK";
 
-update menu set status = "OK" where menu_id <= 3;
-update User set status = "OK" where user_id = 1000;
-
-select * from role
+#ALTER TABLE User ADD refresh_token longtext; 
+#ALTER TABLE User ADD otp char(8);
+#alter table User ADD otp_exp long;
+update User set otp = "99999999" where user_id = 1000;
+select * from User WHERE (user_name = "rap_admin" OR email = "admin@rap-ai.asia") AND (otp <> null OR otp <> "");

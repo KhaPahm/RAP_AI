@@ -5,10 +5,10 @@ import { WriteErrLog } from "../helpers/index.helpers.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Result } from "../interfaces/api.respone.interfaces.js";
-import { ResultCode } from "../interfaces/enum.interfaces.js";
+import { ResultCode, Status } from "../interfaces/enum.interfaces.js";
 
 export class UserInfor {
-	constructor(user_id = "", user_name = "", accessToken = "", role = null, email = "", day_of_birth = null, full_name = "", phone_number = "") {
+	constructor(user_id = "", user_name = "", accessToken = "", role = null, email = "", day_of_birth = null, full_name = "", phone_number = "", status = Status.OK) {
 		this.userId = user_id;
 		this.userName = user_name;
 		this.accessToken = accessToken;
@@ -17,6 +17,7 @@ export class UserInfor {
 		this.dayOfBirth = day_of_birth;
 		this.fullName = full_name;
 		this.phoneNumber = phone_number;
+		this.status = status;
 	}
 
 	set SetToken(accessToken) {
@@ -106,5 +107,54 @@ export class UserInfor {
 
 		//Nếu các thông tin không hợp lệ trả về null
 		return new Result(ResultCode.Err, "Người dùng không tồn tại!")
+	}
+
+	static async Register(userName = "", password = "", email = "", dayOfBirth = "", fullName = "", phoneNumber = "") {
+		//Kieemr tra user da ton tai hay chua
+		const strQueryCheckUser = `SELECT * FROM User WHERE (user_name = "${userName}" OR email = "${email}") AND (otp <> "" OR otp <> null)`;
+		const result = await query(strQueryCheckUser);
+		if(result.length != 0) {
+			return new Result(ResultCode.Warning, "Tài khoản hoặc email đã tồn tại. Vui lòng thử lại!");
+		}
+
+		const otp = Math.floor(Math.random() * 99999999).toString();
+		const currentDate = new Date();
+		const otp_exp = currentDate.getTime() + 300000; //5p
+		const hashedPassword = await UserInfor.HashPassword(password);
+		const strQuery = 
+		`INSERT INTO User(user_name, password, email, day_of_birth, full_name, phone_number, status, otp, otp_exp)
+		VALUES("${userName}", "${hashedPassword}", "${email}", "${dayOfBirth}", "${fullName}", "${phoneNumber}", "WT", "${otp}", ${otp_exp})`;
+		query(strQuery);
+		return new Result(ResultCode.Success, "Success", {userName, email, otp});
+	}
+
+	static async ClearOTP(user_name = "") {
+		const strQueryCheckUser = `UPDATE User SET otp = null AND otp_exp = null WHERE user_name = ${user_name}`;
+		const result = await query(strQuery);
+		if(result == null) {
+			return new Result(ResultCode.Err, "Lỗi quá trình xóa OTP");
+		}
+		return new Result(ResultCode.Success, "Success");
+	}
+
+	static async VerifyOTP(user_name = "", email = "", otp = 0) {
+		const strQuery = `SELECT * FROM User WHERE user_name = "${user_name}" AND status = "WT" AND email = "${email}" and otp = ${otp}`;
+		const result = await query(strQuery);
+		if(result.length != 0) { 
+			const otpExp = result[0].otp_exp;
+			const currenTiem = new Date().getTime();
+			if(currenTiem > otpExp) {
+				return new Result(ResultCode.Err, "OTP quá hạn!");
+			}
+			else {
+				const resultVerify = await query(`UPDATE User SET status = "OK" WHERE user_name = "${user_name}" AND email = "${email}" and otp = ${otp}`);
+				if(resultVerify == null) {
+					return new Result(ResultCode.Err, "Có lỗi trong quá trình xác thực!");
+				}
+				return new Result(ResultCode.Success, "Xác thực thành công!");
+			}
+		}
+
+		return new Result(ResultCode.Warning, "Không tìm thấy tài khoản trong hệ thống!")
 	}
 }

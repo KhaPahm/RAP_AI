@@ -1,0 +1,211 @@
+{
+	"info": {
+		"_postman_id": "77f19e8a-e280-4730-8814-1a644a365d1c",
+		"name": "RAP_AI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31573907"
+	},
+	"item": [
+		{
+			"name": "{{HostRAP}}/user/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var res = pm.response.json();\r",
+							"if(res.data != null) {\r",
+							"    pm.environment.set('TokenRAP', res.data.accessToken);\r",
+							"} else {\r",
+							"    pm.environment.set('TokenRAP', \"\");\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "userName",
+							"value": "rap_admin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "admin2024",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{HostRAP}}/user/login",
+					"host": [
+						"{{HostRAP}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{HostRAP}}/user/resetPassword",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "oldPassword",
+						"value": "admin2024",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "newPassword",
+						"value": "admin2025",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "confirmNewPassword",
+						"value": "admin2025",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Token",
+						"value": "{{TokenRAP}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "oldPassword",
+							"value": "admin2025",
+							"type": "text"
+						},
+						{
+							"key": "newPassword",
+							"value": "admin2024",
+							"type": "text"
+						},
+						{
+							"key": "confirmNewPassword",
+							"value": "admin2024",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{HostRAP}}/user/resetPassword",
+					"host": [
+						"{{HostRAP}}"
+					],
+					"path": [
+						"user",
+						"resetPassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{HostRAP}}/user/test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HostRAP}}/user/test",
+					"host": [
+						"{{HostRAP}}"
+					],
+					"path": [
+						"user",
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{HostRAP}}/user/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "userName",
+							"value": "user01",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "khapham1909@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "user2024",
+							"type": "text"
+						},
+						{
+							"key": "confirmPassword",
+							"value": "user2024",
+							"type": "text"
+						},
+						{
+							"key": "dayOfBirth",
+							"value": "2002-09-19",
+							"description": "//yyyy-MM-dd",
+							"type": "text"
+						},
+						{
+							"key": "fullName",
+							"value": "Pham Hoang Kha",
+							"type": "text"
+						},
+						{
+							"key": "phoneNumber",
+							"value": "038661138",
+							"description": "//10 so",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{HostRAP}}/user/register",
+					"host": [
+						"{{HostRAP}}"
+					],
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

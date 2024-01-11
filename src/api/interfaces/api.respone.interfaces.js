@@ -18,8 +18,13 @@ export default class ApiRespone {
 }
 
 export class Result {
-	constructor(resultCode = ResultCode.Success, message = "") {
-		this.resultCode = resultCode
+	constructor(resultCode = ResultCode.Success, message = "", data = null) {
+		this.resultCode = resultCode;
+		this.data = data;
 		this.message = message;
+	}
+
+	set SetData(data) {
+		this.data = data;
 	}
 }
