@@ -20,7 +20,7 @@ export async function Register(userName = "", password = "", email = "", dayOfBi
 	if(resultRegister.resultCode == ResultCode.Success) 
 	{
 		//Gửi mail xác thực
-		const resultEmailSending = await SendingMail(email, "Verify account", `Your OTP is: ${resultRegister.data.otp}`);
+		const resultEmailSending = await SendingMail(email, "Verify account", `Your OTP is: ${resultRegister.data.otp}`, userName);
 		//Nếu gửi mail thành công
 		if(resultEmailSending == ResultCode.Success) {
 			//Nếu gủi mail khoogn thành công thì xóa mã OTP trong db
