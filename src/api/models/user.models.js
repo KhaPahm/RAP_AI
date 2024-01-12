@@ -6,9 +6,10 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Result } from "../interfaces/api.respone.interfaces.js";
 import { ResultCode, Status } from "../interfaces/enum.interfaces.js";
+import ImageModel from "./image.models.js";
 
 export class UserInfor {
-	constructor(user_id = "", user_name = "", accessToken = "", role = null, email = "", day_of_birth = null, full_name = "", phone_number = "", status = Status.OK) {
+	constructor(user_id = "", user_name = "", accessToken = "", role = null, email = "", day_of_birth = null, full_name = "", phone_number = "", avt = "", status = Status.OK) {
 		this.userId = user_id;
 		this.userName = user_name;
 		this.accessToken = accessToken;
@@ -17,6 +18,7 @@ export class UserInfor {
 		this.dayOfBirth = day_of_birth;
 		this.fullName = full_name;
 		this.phoneNumber = phone_number;
+		this.avt = avt;
 		this.status = status;
 	}
 
@@ -62,12 +64,12 @@ export class UserInfor {
 			//Nếu như mật khẩu match
 			if(match) {
 				//Tạo access token
+				const role = await ls_Menu.GetMenusForUser(result[0].user_id);
 				const accessToken = await UserInfor.GenToken({
 					userId: result[0].user_id, 
-					userName: result[0].user_name
+					role: role
 				});
-				console.log(accessToken);
-				const role = await ls_Menu.GetMenusForUser(result[0].user_id);
+				const avt = await ImageModel.GetImage(result[0].avt);
 				//Trả về thông tin user
 				return new UserInfor(
 					result[0].user_id, 
@@ -77,7 +79,8 @@ export class UserInfor {
 					result[0].email, 
 					result[0].day_of_birth, 
 					result[0].full_name, 
-					result[0].phone_number
+					result[0].phone_number,
+					avt[0].image_public_path
 				);
 			}
 		}
@@ -146,6 +149,7 @@ export class UserInfor {
 			const otpExp = result[0].otp_exp;
 			const currenTiem = new Date().getTime();
 			if(currenTiem > otpExp) {
+				this.ClearOTP(user_name);
 				return new Result(ResultCode.Err, "OTP quá hạn!");
 			}
 			else {

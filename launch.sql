@@ -108,7 +108,7 @@ CREATE TABLE Animal_Red_List
 
 CREATE TABLE Image
 (
-  image_id INT NOT NULL COMMENT 'id cua anh',
+  image_id INT NOT NULL AUTO_INCREMENT COMMENT 'id cua anh',
   image_local_path LONGTEXT NOT NULL COMMENT 'duong dan anh trong may',
   image_public_path LONGTEXT NOT NULL COMMENT 'duong dan anh tren cloud',
   description NVARCHAR(255) NOT NULL COMMENT 'mo ta cua anh',
@@ -186,4 +186,8 @@ CREATE TABLE History_Watch
 #ALTER TABLE User ADD otp char(8);
 #alter table User ADD otp_exp long;
 update User set otp = "99999999" where user_id = 1000;
-select * from User WHERE (user_name = "rap_admin" OR email = "admin@rap-ai.asia") AND (otp <> null OR otp <> "");
+update User set status = "WT" where user_id > 1000;
+
+alter table Image Change image_id 
+
+insert into Image(image_local_path, image_public_path, image_type, description) values ("https://res.cloudinary.com/dpsux2vzu/image/upload/f_auto,q_auto/v1/RAP/UserPersionalmage/iei7keas62niynr51abc", "https://res.cloudinary.com/dpsux2vzu/image/upload/f_auto,q_auto/v1/RAP/UserPersionalmage/iei7keas62niynr51abc", "AVT", "Default avatar image.");

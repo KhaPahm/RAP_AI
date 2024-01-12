@@ -12,7 +12,7 @@ export default class ApiRespone {
 		return new ApiRespone(totalResult, data, 0, "Successful");
 	}
 
-	static Err(resultCode = 0, message = "Successful!") {
+	static Err(resultCode = 0, message = "Err!") {
 		return new ApiRespone(0, null, resultCode, message);
 	}
 }
