@@ -1,4 +1,0 @@
-
-----------------------------------------------------
-function now() { [native code] }
-SELECT * FROM User WHERE user_name = "rap_admin"
