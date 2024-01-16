@@ -25,6 +25,24 @@ export class Role {
         return new Result(ResultCode.Err, "Erro when add new role!", null);
     }
 
+    async UpdateRole() {
+        const strQuery = `UPDATE Role SET role_name = "${this.role_name}", 
+                                          role_description = "${this.role_description}", 
+                                          status = "${this.status}" 
+                                          WHERE role_id = ${this.role_id}`;
+        const result = await query(strQuery);
+        if(result.resultCode == ResultCode.Success)
+        {
+            this.role_id = result.data.insertId;
+            return new Result(ResultCode.Success, "Success!", this);
+        }
+        if(result.resultCode == ResultCode.Warning && result.data.code == "ER_DUP_ENTRY") {
+            return new Result(ResultCode.Err, "Phân quyền bị trùng, vui lòng thử lại!", null);
+        }
+
+        return new Result(ResultCode.Err, "Erro when add new role!", null);
+    }
+
     static async SetRoleForUser(user_id, role_id = 3) {
 		const result = await query(`INSERT INTO User_Role(user_id, role_id) VALUES (${user_id}, ${role_id});`)
 		return result;
@@ -49,23 +67,4 @@ export class Role {
 
         return result;
     }
-
-    async UpdateRole() {
-        const strQuery = `UPDATE Role SET role_name = "${this.role_name}", 
-                                          role_description = "${this.role_description}", 
-                                          status = "${this.status}" 
-                                          WHERE role_id = ${this.role_id}`;
-        const result = await query(strQuery);
-        if(result.resultCode == ResultCode.Success)
-        {
-            this.role_id = result.data.insertId;
-            return new Result(ResultCode.Success, "Success!", this);
-        }
-        if(result.resultCode == ResultCode.Warning && result.data.code == "ER_DUP_ENTRY") {
-            return new Result(ResultCode.Err, "Phân quyền bị trùng, vui lòng thử lại!", null);
-        }
-
-        return new Result(ResultCode.Err, "Erro when add new role!", null);
-    }
-
 }

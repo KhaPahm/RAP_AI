@@ -6,7 +6,10 @@ import { AddMenuToRole } from "../services/menu_role.services.js";
 import { Role } from "../models/role.models.js";
 import { Menu_Role } from "../models/menu_role.models.js";
 import { Menu } from "../models/menu.models.js";
+import { Conservation_Status } from "../models/conservation_status.models.js";
+import { AddConservationStatus, GetConservationStatus, UpdateConservationStatus } from "../services/conservation_status.services.js";
 
+//#region Handle menu
 export async function _AddNewMenu(req, res) {
     const menuName = req.body.menuName || "";
 	const menuPath = req.body.menuPath || "";
@@ -24,6 +27,40 @@ export async function _AddNewMenu(req, res) {
         else {
             res.json(ApiRespone.Err(100, result.message));
         }
+    }
+}
+
+export async function _UpdateMenu(req, res) {
+    const menuId = req.body.menuId || 0;
+    const menuName = req.body.menuName || "";
+	const menuPath = req.body.menuPath || "";
+    const status = req.body.status || "OK";
+    if(menuName == "" || menuPath == "" || menuId == 0) {
+        res.json(ApiRespone.Err(100, "Dữ liệu bị trống!"));
+    }
+    else {
+        const menu = new Menu(menuId, menuName, menuPath, null, status);
+        const result = await UpdateMenu(menu);
+        if(result.resultCode == ResultCode.Success) {
+            res.json(ApiRespone.Success(result.data.length, null));
+        }
+        else {
+            res.json(ApiRespone.Err(100, result.message));
+        }
+    }
+}
+
+export async function _GetMenus(req, res) {
+    const menuId = Number(req.body.menuId) || 0;
+    const status = req.body.status || null;
+    
+
+    const result = await GetMenus(menuId, status);
+    if(result.resultCode == ResultCode.Success) {
+        res.json(ApiRespone.Success(result.data.length, result.data));
+    }
+    else {
+        res.json(ApiRespone.Err(100, result.message));
     }
 }
 
@@ -45,7 +82,9 @@ export async function _AddMenuToRole(req, res) {
         }
     }
 }
+//#endregion
 
+//#region Handle role
 export async function _AddNewRole(req, res) {
     const roleName = req.body.roleName || "";
     const roleDescription = req.body.roleDescription || "";
@@ -65,24 +104,11 @@ export async function _AddNewRole(req, res) {
     }
 } 
 
-export async function _GetMenus(req, res) {
-    const menuId = Number(req.body.menuId) || 0;
-    const status = req.body.status || null;
-    
-
-    const result = await GetMenus(menuId, status);
-    if(result.resultCode == ResultCode.Success) {
-        res.json(ApiRespone.Success(result.data.length, result.data));
-    }
-    else {
-        res.json(ApiRespone.Err(100, result.message));
-    }
-}
-
 export async function _GetRoles(req, res) {
     const roleId = Number(req.body.roleId) || 0;
+    const status = req.body.status || "OK";
 
-    const result = await GetRoles(roleId);
+    const result = await GetRoles(roleId, status);
     if(result.resultCode == ResultCode.Success) {
         res.json(ApiRespone.Success(result.data.length, result.data));
     }
@@ -111,23 +137,62 @@ export async function _UpdateRole(req, res) {
         }
     }
 }
+//#endregion
 
-export async function _UpdateMenu(req, res) {
-    const menuId = req.body.menuId || 0;
-    const menuName = req.body.menuName || "";
-	const menuPath = req.body.menuPath || "";
+//#region Handle conservation status
+export async function _AddConservationStatus(req, res) {
+    const statusName = req.body.statusName || "";
+    const standName = req.body.standName || "";
+    const description = req.body.description || "";
     const status = req.body.status || "OK";
-    if(menuName == "" || menuPath == "" || menuId == 0) {
-        res.json(ApiRespone.Err(100, "Dữ liệu bị trống!"));
+
+    if(standName == "" || statusName == "") {
+        res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
     }
     else {
-        const menu = new Menu(menuId, menuName, menuPath, null, status);
-        const result = await UpdateMenu(menu);
+        const cs = new Conservation_Status(0, statusName, standName, description, status);
+        const result = await AddConservationStatus(cs);
         if(result.resultCode == ResultCode.Success) {
-            res.json(ApiRespone.Success(result.data.length, null));
+            res.json(ApiRespone.Success(1, result.data));
         }
         else {
             res.json(ApiRespone.Err(100, result.message));
         }
     }
 }
+
+export async function _GetConservationStatus(req, res) {
+    const conservationStatusId = Number(req.body.conservationStatusId) || 0;
+    const status = req.body.status || "OK";
+
+    const result = await GetConservationStatus(conservationStatusId, status);
+    if(result.resultCode == ResultCode.Success) {
+        res.json(ApiRespone.Success(result.data.length, result.data));
+    }
+    else {
+        res.json(ApiRespone.Err(100, result.message));
+    }
+}
+
+export async function _UpdateConservationStatus(req, res) {
+    const conservationStatusId = Number(req.body.conservationStatusId) || 0;
+    const statusName = req.body.statusName || "";
+    const standName = req.body.standName || "";
+    const description = req.body.description || "";
+    const status = req.body.status || "OK";
+
+    if(standName == "" || statusName == "" || conservationStatusId == 0) {
+        res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
+    }
+    else {
+        const cs = new Conservation_Status(conservationStatusId, statusName, standName, description, status);
+        const result = await UpdateConservationStatus(cs);
+        if(result.resultCode == ResultCode.Success) {
+            res.json(ApiRespone.Success(1, result.data));
+        }
+        else {
+            res.json(ApiRespone.Err(100, result.message));
+        }
+    }
+}
+//#endregion

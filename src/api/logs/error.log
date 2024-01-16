@@ -1,0 +1,32 @@
+
+----------------------------------------------------
+Tue Jan 16 2024 22:47:41 GMT+0700 (GMT+07:00)
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
+
+----------------------------------------------------
+Tue Jan 16 2024 22:48:18 GMT+0700 (GMT+07:00)
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
+
+----------------------------------------------------
+Tue Jan 16 2024 22:49:49 GMT+0700 (GMT+07:00)
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
+
+----------------------------------------------------
+Tue Jan 16 2024 22:51:00 GMT+0700 (GMT+07:00)
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
+
+----------------------------------------------------
+Tue Jan 16 2024 22:51:14 GMT+0700 (GMT+07:00)
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
+
+----------------------------------------------------
+Tue Jan 16 2024 22:51:51 GMT+0700 (GMT+07:00)
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3
+
+----------------------------------------------------
+Tue Jan 16 2024 22:56:01 GMT+0700 (GMT+07:00)
+Error: Data too long for column 'description' at row 1
+
+----------------------------------------------------
+Tue Jan 16 2024 22:58:27 GMT+0700 (GMT+07:00)
+Error: Duplicate entry 'Data Deficient' for key 'conservation_status.status_name'

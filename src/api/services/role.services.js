@@ -1,8 +1,8 @@
 import { Status } from "../interfaces/enum.interfaces.js";
 import { Role } from "../models/role.models.js";
 
-export async function GetRoles(roleId = 0) {
-    const result = await Role.GetRoles(roleId);
+export async function GetRoles(roleId = 0, status = null) {
+    const result = await Role.GetRoles(roleId, status);
     return result;
 }
 
