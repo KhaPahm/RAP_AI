@@ -18,14 +18,15 @@ export default class ImageModel {
     //SYS - ảnh hệ thống
     static async GetImage(id = 1, type = "AVT") {
         const images = await query(`SELECT * FROM Image WHERE image_id = ${id} AND image_type = "${type}"`)
-        if(images.length == 0) {
-            return new Result(ResultCode.Err, "Lỗi quá trình lấy ảnh!")
+        if(images.resultCode == ResultCode.Success) {
+            if(images.data.length == 0) 
+                return new Result(ResultCode.Warning, "Không tìm thấy ảnh!");
+            const listImage = [];
+            images.data.forEach(image => {
+                listImage.push(new ImageModel(image));
+            });
+            return images.data = listImage;
         }
-        const listImage = [];
-        images.forEach(image => {
-            listImage.push(new ImageModel(image));
-        });
-
-        return listImage;
+        return images;
     }
 }

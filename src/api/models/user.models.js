@@ -1,12 +1,13 @@
 import { query } from "./index.models.js"; 
 import { compare } from "bcrypt"; 
-import { ls_Menu } from "./menu.models.js";
+import { Menu } from "./menu.models.js";
 import { WriteErrLog } from "../helpers/index.helpers.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Result } from "../interfaces/api.respone.interfaces.js";
 import { ResultCode, Status } from "../interfaces/enum.interfaces.js";
 import ImageModel from "./image.models.js";
+import { Role } from "./role.models.js";
 
 export class UserInfor {
 	constructor(user_id = "", user_name = "", accessToken = "", role = null, email = "", day_of_birth = null, full_name = "", phone_number = "", avt = "", status = Status.OK) {
@@ -58,49 +59,52 @@ export class UserInfor {
 	static async Login(user_name = "", password = "") {
 		const strQuery = `SELECT * FROM User WHERE user_name = "${user_name}" AND status = "OK"`;
 		const result = await query(strQuery);
-		if(result.length != 0) {
+		if(result.resultCode == ResultCode.Success && result.data.length == 1) {
 			//So sánh password
-			const match = await compare(password, result[0].password);
+			const match = await compare(password, result.data[0].password);
 			//Nếu như mật khẩu match
 			if(match) {
 				//Tạo access token
-				const role = await ls_Menu.GetMenusForUser(result[0].user_id);
+				const role = await Menu.GetListMenuPath(result.data[0].user_id);
 				const accessToken = await UserInfor.GenToken({
-					userId: result[0].user_id, 
+					userId: result.data[0].user_id, 
 					role: role
 				});
-				const avt = await ImageModel.GetImage(result[0].avt);
+				const avt = await ImageModel.GetImage(result.data[0].avt);
+				
 				//Trả về thông tin user
-				return new UserInfor(
-					result[0].user_id, 
-					result[0].user_name, 
+				return new Result(ResultCode.Success, "Success", new UserInfor(
+					result.data[0].user_id, 
+					result.data[0].user_name, 
 					accessToken,
-					role,
-					result[0].email, 
-					result[0].day_of_birth, 
-					result[0].full_name, 
-					result[0].phone_number,
-					avt[0].image_public_path
-				);
+					role.data,
+					result.data[0].email, 
+					result.data[0].day_of_birth, 
+					result.data[0].full_name, 
+					result.data[0].phone_number,
+					avt.data == null ? null : avt.data[0].image_public_path
+				));
 			}
 		}
+		else if(result.resultCode == ResultCode.Success && result.data.length == 0) {
+			return new Result(ResultCode.Warning, "Tài khoản hoặc mật khẩu không đúng!", null);
+		}
 
-		//Nếu các thông tin không hợp lệ trả về null
-		return null;
+		return new Result(ResultCode.Err, "Lỗi quá trình đăng nhập!", null);
 	}
 
-	static async ResetPassword(userId = "", oldPassword = "", newPassword = "") {
-		const strQuery = `SELECT * FROM User WHERE user_id = "${userId}" AND status = "OK"`;
+	static async ResetPassword(userName = "", oldPassword = "", newPassword = "") {
+		const strQuery = `SELECT * FROM User WHERE user_name = "${userName}" AND status = "OK"`;
 		const result = await query(strQuery);
-		if(result.length != 0) {
+		if(result.resultCode == ResultCode.Success && result.data.length != 0) {
 			//So sánh password
-			const match = await compare(oldPassword, result[0].password);
+			const match = await compare(oldPassword, result.data[0].password);
 			//Nếu như mật khẩu match
 			if(match) {
 				const hashedNewPassword = await this.HashPassword(newPassword);
 				const strQueryUpdatePassword = `UPDATE User SET password = "${hashedNewPassword}" WHERE user_id = ${userId}`;
 				const resultUpdate = await query(strQueryUpdatePassword);
-				if(resultUpdate == null) {
+				if(resultUpdate.resultCode != ResultCode.Success) {
 					return new Result(ResultCode.Err, "Lỗi trong quá trình cập nhật! Vui lòng thử lại!")
 				}
 				return new Result(ResultCode.Success, "Đổi mật khẩu thành công!")
@@ -114,53 +118,84 @@ export class UserInfor {
 
 	static async Register(userName = "", password = "", email = "", dayOfBirth = "", fullName = "", phoneNumber = "") {
 		//Kieemr tra user da ton tai hay chua
-		const strQueryCheckUser = `SELECT * FROM User WHERE (user_name = "${userName}" OR email = "${email}") AND (otp <> "" OR otp <> null)`;
+		const strQueryCheckUser = `SELECT * FROM User WHERE (user_name = "${userName}" OR email = "${email}")`;
 		const result = await query(strQueryCheckUser);
-		if(result.length != 0) {
-			if(result[0].Status != "WT") {
+		var resetOtp = false;
+		if(result.data.length != 0) {
+			if(result.data[0].status != "WT") {
 				return new Result(ResultCode.Warning, "Tài khoản hoặc email đã tồn tại. Vui lòng thử lại!");
 			}
+			else {
+				resetOtp = true;
+			}
 		}
-
+		
 		const otp = Math.floor(Math.random() * 99999999).toString();
 		const currentDate = new Date();
 		const otp_exp = currentDate.getTime() + 300000; //5p
 		const hashedPassword = await UserInfor.HashPassword(password);
-		const strQuery = 
-		`INSERT INTO User(user_name, password, email, day_of_birth, full_name, phone_number, status, otp, otp_exp)
-		VALUES("${userName}", "${hashedPassword}", "${email}", "${dayOfBirth}", "${fullName}", "${phoneNumber}", "WT", "${otp}", ${otp_exp})`;
-		query(strQuery);
-		return new Result(ResultCode.Success, "Success", {userName, email, otp});
+		var resultRegister;
+		if(resetOtp == true) {
+			const strQueryUpdate = 
+			`UPDATE User SET password = "${hashedPassword}", 
+							 email = "${email}", 
+							 day_of_birth = "${dayOfBirth}", 
+							 full_name = "${fullName}", 
+							 phone_number = "${phoneNumber}", 
+							 otp = "${otp}",
+							 otp_exp = ${otp_exp} where user_id = ${result.data[0].user_id}`;
+			resultRegister = await query(strQueryUpdate);
+		}
+		else {
+			const strQuery = 
+			`INSERT INTO User(user_name, password, email, day_of_birth, full_name, phone_number, status, otp, otp_exp)
+			VALUES("${userName}", "${hashedPassword}", "${email}", "${dayOfBirth}", "${fullName}", "${phoneNumber}", "WT", "${otp}", ${otp_exp})`;
+			resultRegister = await query(strQuery);
+		}
+		if(resultRegister.resultCode == ResultCode.Success)
+			return new Result(ResultCode.Success, "Success", {userName, email, otp});
+		else 
+			return new Result(resultRegister.resultCode, "Lỗi quá trình đăng ký!", null);
 	}
 
 	static async ClearOTP(user_name = "") {
 		const strQueryCheckUser = `UPDATE User SET otp = null AND otp_exp = null WHERE user_name = ${user_name}`;
-		const result = await query(strQuery);
-		if(result == null) {
+		const result = await query(strQueryCheckUser);
+		if(result.resultCode != ResultCode.Success) {
 			return new Result(ResultCode.Err, "Lỗi quá trình xóa OTP");
 		}
 		return new Result(ResultCode.Success, "Success");
 	}
 
 	static async VerifyOTP(user_name = "", email = "", otp = 0) {
-		const strQuery = `SELECT * FROM User WHERE user_name = "${user_name}" AND status = "WT" AND email = "${email}" and otp = ${otp}`;
+		const strQuery = `SELECT user_id, otp_exp FROM User WHERE user_name = "${user_name}" AND status = "WT" AND email = "${email}" and otp = ${otp}`;
 		const result = await query(strQuery);
-		if(result.length != 0) { 
-			const otpExp = result[0].otp_exp;
+		if(result.resultCode == ResultCode.Success && result.data.length == 1) { 
+			const otpExp = result.data[0].otp_exp;
 			const currenTiem = new Date().getTime();
 			if(currenTiem > otpExp) {
 				this.ClearOTP(user_name);
-				return new Result(ResultCode.Err, "OTP quá hạn!");
+				return new Result(ResultCode.Warning, "OTP quá hạn!");
 			}
 			else {
 				const resultVerify = await query(`UPDATE User SET status = "OK" WHERE user_name = "${user_name}" AND email = "${email}" and otp = ${otp}`);
-				if(resultVerify == null) {
+				const resultSetRole = Role.SetRoleForUser(result.data[0].user_id, 3);
+				if(resultVerify.resultCode != ResultCode.Success || (await resultSetRole).resultCode != ResultCode.Success) {
 					return new Result(ResultCode.Err, "Có lỗi trong quá trình xác thực!");
 				}
 				return new Result(ResultCode.Success, "Xác thực thành công!");
 			}
 		}
 
-		return new Result(ResultCode.Warning, "Không tìm thấy tài khoản trong hệ thống!")
+		return new Result(ResultCode.Warning, "Lỗi xác thực!")
+	}
+
+	//Static method for admin role ---------------------------------------
+	static async AddNewRole(user_id, role_id = 3) {
+		
+	}
+
+	static async AddRoleForAccount() {
+
 	}
 }

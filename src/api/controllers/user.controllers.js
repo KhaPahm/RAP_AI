@@ -8,19 +8,19 @@ export async function _LogIn(req, res) {
 
 	const userInfor = await Login(userName, password);
 
-	if (userInfor != null) {
-		res.json(APIRespone.Success(1, userInfor));
+	if (userInfor.resultCode == ResultCode.Success) {
+		res.json(APIRespone.Success(1, userInfor.data));
 	} else {
-		res.json(APIRespone.Err(100, "Tên đăng nhập hoặc mật khẩu không đúng"));
+		res.json(APIRespone.Err(100, userInfor.message));
 	}
 }
 
 export async function _SetPassword(req, res) {
-	const userId = 1000; //Đổi lại
+	const userName = req.user.user_name; //Đổi lại
 	const oldPassword = req.body.oldPassword;
 	const newPassword = req.body.newPassword;
 
-	const result = await RessetPassword(userId, oldPassword, newPassword);
+	const result = await RessetPassword(userName, oldPassword, newPassword);
 	if(result.resultCode != ResultCode.Err) {
 		res.json(APIRespone.Success(0, null));
 	} else {

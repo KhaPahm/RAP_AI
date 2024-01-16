@@ -1,13 +1,16 @@
 /* eslint-disable no-undef */
 
 import fs from "fs";
-import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from "path";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-export function WriteErrLog(errMsg) {
-	var errMsg = "\n----------------------------------------------------\n"
-			+ Date.now.toString() + "\n";
-	fs.appendFile("./src/api/logs/error.log", errMsg, (err) => {
+export async function WriteErrLog(errMsg) {
+	var decorerrMsg = "\n----------------------------------------------------\n"
+			+ Date().toString() + "\n" + errMsg + "\n";
+	await fs.appendFile(__dirname + "/../logs/error.log", decorerrMsg, (err) => {
 		if(err) throw err;
 	});
 	// eslint-disable-next-line no-redeclare

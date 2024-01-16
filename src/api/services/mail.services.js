@@ -4,7 +4,7 @@ import { OAuth2Client } from "google-auth-library";
 import { ResultCode } from "../interfaces/enum.interfaces.js"
 import { WriteErrLog } from "../helpers/index.helpers.js";
 import { Result } from "../interfaces/api.respone.interfaces.js";
-export async function SendingMail(email = "", title = "", content = "", userName = "") {
+export async function SendingMail(email = "", title = "", content = "") {
     const outh2 = new OAuth2Client(
         GoogleOAuth2.clientId,
         GoogleOAuth2.clientSecret
@@ -36,7 +36,7 @@ export async function SendingMail(email = "", title = "", content = "", userName
     
         const result = await transport.sendMail(mailOptions);
         if(result != null) {
-            return new Result(ResultCode.Success, `Đã gửi OTP đến địa chỉ: ${email}!`, {userName, email});
+            return new Result(ResultCode.Success, `Đã gửi OTP đến địa chỉ: ${email}!`);
         } else {
             return new Result(ResultCode.Err, `Không thể gửi email đến địa chỉ: ${email}!`);
         }
