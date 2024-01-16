@@ -10,16 +10,14 @@ const __dirname = dirname(__filename);
 export async function WriteErrLog(errMsg) {
 	var decorerrMsg = "\n----------------------------------------------------\n"
 			+ Date().toString() + "\n" + errMsg + "\n";
-	await fs.appendFile(__dirname + "/../logs/error.log", decorerrMsg, (err) => {
+	await fs.appendFile(__dirname + "/../logs/err.log", decorerrMsg, (err) => {
 		if(err) throw err;
 	});
-	// eslint-disable-next-line no-redeclare
-	
 }
-export function WriteInforLog(msgInfor) {
+export async function WriteInforLog(msgInfor) {
 	var msg = "\n----------------------------------------------------\n"
 			+ Date.now.toString() + "\n" + msgInfor;
-	fs.appendFile("./src/api/logs/loginfo.log", msg, (err) => {
+	await fs.appendFile(__dirname + "/../logs/infor.log", msg, (err) => {
 		if(err) throw err;
 	});
 }
