@@ -1,5 +1,5 @@
 import Mailer from "nodemailer";
-import { GoogleOAuth2 } from "../../config/googleAuth.config.js";
+import { GoogleOAuth2 } from "../../config/googleService.config.js";
 import { OAuth2Client } from "google-auth-library";
 import { ResultCode } from "../interfaces/enum.interfaces.js"
 import { WriteErrLog } from "../helpers/index.helpers.js";
