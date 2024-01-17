@@ -40,7 +40,7 @@ export class Conservation_Status {
         if(result.resultCode == ResultCode.Success)
         {
             this.role_id = result.data.insertId;
-            return new Result(ResultCode.Success, "Thêm tình trạng bảo tồn thành công!", this);
+            return new Result(ResultCode.Success, "Cập nhật tình trạng bảo tồn thành công!", this);
         }
         if(result.resultCode == ResultCode.Warning && result.data.code == "ER_DUP_ENTRY") {
             return new Result(ResultCode.Err, "Tình trạng bảo tồn đã tồn tại, vui lòng nhập mới", null);

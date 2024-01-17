@@ -1,4 +1,4 @@
-import { mySqlRds as mySqlConfig } from "../../config/database.config.js";
+import { mysq as mySqlConfig } from "../../config/database.config.js";
 import { createConnection } from "mysql2/promise";
 import { WriteErrLog } from "../helpers/index.helpers.js";
 import { Result } from "../interfaces/api.respone.interfaces.js";

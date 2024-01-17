@@ -8,6 +8,8 @@ import { Menu_Role } from "../models/menu_role.models.js";
 import { Menu } from "../models/menu.models.js";
 import { Conservation_Status } from "../models/conservation_status.models.js";
 import { AddConservationStatus, GetConservationStatus, UpdateConservationStatus } from "../services/conservation_status.services.js";
+import { Animal_Type } from "../models/animal_types.models.js";
+import { AddAnimalType, GetAnimalTypes, UpdateAnimalType } from "../services/animal_types.services.js";
 
 //#region Handle menu
 export async function _AddNewMenu(req, res) {
@@ -196,3 +198,60 @@ export async function _UpdateConservationStatus(req, res) {
     }
 }
 //#endregion
+
+//#region Handle animal type
+export async function _AddAnimalType(req, res) {
+    const typeName = req.body.typeName || "";
+    const description = req.body.description || "";
+    const status = req.body.status || "OK";
+
+    if(typeName == "") {
+        res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
+    }
+    else {
+        const animalType = new Animal_Type(0, typeName, description, status);
+        const result = await AddAnimalType(animalType);
+        if(result.resultCode == ResultCode.Success) {
+            res.json(ApiRespone.Success(1, result.data));
+        }
+        else {
+            res.json(ApiRespone.Err(100, result.message));
+        }
+    }
+}
+
+export async function _GetAnimalType(req, res) {
+    const animalTypeId = Number(req.body.animalTypeId) || 0;
+    const status = req.body.status || "OK";
+
+    const result = await GetAnimalTypes(animalTypeId, status);
+    if(result.resultCode == ResultCode.Success) {
+        res.json(ApiRespone.Success(result.data.length, result.data));
+    }
+    else {
+        res.json(ApiRespone.Err(100, result.message));
+    }
+}
+
+export async function _UpdateAnimalType(req, res) {
+    const animalTypeId = Number(req.body.animalTypeId) || 0;
+    const typeName = req.body.typeName || "";
+    const description = req.body.description || "";
+    const status = req.body.status || "OK";
+
+    if(animalTypeId == 0 || typeName == "") {
+        res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
+    }
+    else {
+        const animalType = new Animal_Type(animalTypeId, typeName, description, status);
+        const result = await UpdateAnimalType(animalType);
+        if(result.resultCode == ResultCode.Success) {
+            res.json(ApiRespone.Success(1, result.data));
+        }
+        else {
+            res.json(ApiRespone.Err(100, result.message));
+        }
+    }
+}
+//#endregion
+
