@@ -3,6 +3,7 @@ import Multer from "multer";
 import { TokenValidator } from "../middlewares/verify.token.middleware.js";
 import { CheckUrlRole } from "../middlewares/role.check.middleware.js";
 import { _AddAnimalType, _AddConservationStatus, _AddMenuToRole, _AddNewMenu, _AddNewRole, _GetAnimalType, _GetConservationStatus, _GetMenus, _GetRoles, _UpdateAnimalType, _UpdateConservationStatus, _UpdateMenu, _UpdateRole } from "../controllers/admin.controllers.js";
+import { _AddAnimalRedList, _UpdateAnimalRedList } from "../controllers/animal_red_list.controller.js";
 
 const upload = Multer();
 const router = Router();
@@ -23,5 +24,8 @@ router.post("/updateConservationStatus", upload.any(), TokenValidator, CheckUrlR
 router.post("/addAnimalType", upload.any(), TokenValidator, CheckUrlRole, _AddAnimalType);
 router.post("/getAnimalType", upload.any(), TokenValidator, CheckUrlRole, _GetAnimalType);
 router.post("/updateAnimalType", upload.any(), TokenValidator, CheckUrlRole, _UpdateAnimalType);
+
+router.post("/addAnimalRedList", upload.array("images"), TokenValidator, CheckUrlRole, _AddAnimalRedList);
+router.post("/updateAnimalRedList", upload.array("images"), TokenValidator, CheckUrlRole, _UpdateAnimalRedList);
 
 export default router;

@@ -9,3 +9,21 @@ export const ResultCode = Object.freeze({
     Err: "Error",
     Warning: "Warning"
 })
+
+export const FolderInCloudinary = Object.freeze({
+    ModelsImages: "RAP/ModelsImages",
+    RedListImages: "RAP/RedListImages",
+    UserImageRedict: "RAP/UserImageRedict",
+    UserPersionalImage: "RAP/UserPersionalImage",
+})
+
+//AVT - ảnh đại diện
+//RPT - ảnh report
+//AIC - ảnh dự đoán
+//SYS - ảnh hệ thống
+export const ImageType = Object.freeze({
+    Avata: "AVT",
+    Report: "RPT",
+    Redict: "AIC",
+    System: "SYS"
+})

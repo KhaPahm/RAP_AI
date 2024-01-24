@@ -1,32 +1,65 @@
 import { Result } from "../interfaces/api.respone.interfaces.js";
-import { ResultCode } from "../interfaces/enum.interfaces.js";
+import { ImageType, ResultCode, Status } from "../interfaces/enum.interfaces.js";
 import { query } from "./index.models.js"; 
 
 export default class ImageModel {
-    constructor(image = {}) {
-        this.image_id = image.image_id;
-        this.image_local_path = image.image_local_path;
-        this.image_public_path = image.image_public_path;
-        this.description = image.description;
-        this.image_type = image.image_type;
-        this.status = image.status;
+    constructor(image_id = 0, image_local_path ="", image_public_path = "", description = "", image_type  = "", status = Status.OK, animal_red_list_id = null, user_id = null, report_id = null) {
+        this.image_id = image_id;
+        this.image_local_path = image_local_path;
+        this.image_public_path = image_public_path;
+        this.description = description;
+        this.image_type = image_type;
+        this.status = status;
+        this.animal_red_list_id = animal_red_list_id;
+        this.user_id = user_id;
+        this.report_id = report_id;
     }
 
     //AVT - ảnh đại diện
     //RPT - ảnh report
     //AIC - ảnh dự đoán
     //SYS - ảnh hệ thống
-    static async GetImage(id = 1, type = "AVT") {
-        const images = await query(`SELECT * FROM Image WHERE image_id = ${id} AND image_type = "${type}"`)
+    static async GetImage(id = 1, type = ImageType.Avata) {
+        const images = await query(`SELECT * FROM Image WHERE image_id = ${id} AND image_type = "${type}" and status = "OK"`)
         if(images.resultCode == ResultCode.Success) {
             if(images.data.length == 0) 
                 return new Result(ResultCode.Warning, "Không tìm thấy ảnh!");
-            const listImage = [];
-            images.data.forEach(image => {
-                listImage.push(new ImageModel(image));
-            });
-            return images.data = listImage;
+            
+            return images;
         }
         return images;
+    }
+
+    async AddNewImage() {
+        const strQuery = `INSERT INTO Image(image_local_path, image_public_path, image_type, description, status, animal_red_list_id, user_id, report_id) 
+                        VALUES ("${this.image_local_path}", "${this.image_public_path}", "${this.image_type}", "${this.description}", "${this.status}", ${this.animal_red_list_id}, ${this.user_id}, ${this.report_id})`;
+        const result = await query(strQuery);
+
+        if(result.resultCode == ResultCode.Success)
+        {
+            this.image_id = result.data.insertId;
+            return new Result(ResultCode.Success, "Thêm ảnh thành công!", this);
+        }
+
+        return new Result(ResultCode.Err, "Erro when add new role!", null);
+    }
+
+    async UpdateStatus() {
+        const strQuery = `UPDATE Image SET status = "${this.status}" 
+                            WHERE image_id = ${this.image_id}`;
+        const result = await query(strQuery);
+
+        if(result.resultCode == ResultCode.Success)
+        {
+            return new Result(ResultCode.Success, "Chỉnh trạng thái ảnh thành công!", this);
+        }
+
+        return new Result(ResultCode.Err, "Erro when add new role!", null);
+    }
+
+    static async GetImageByAnimalRedList(animal_red_list_id = 0, status = Status.OK) {
+        const result = await query(`SELECT * FROM Image WHERE animal_red_list_id = ${animal_red_list_id} AND image_type = "${ImageType.System}" and status = "${status}"`)
+
+        return result;
     }
 }

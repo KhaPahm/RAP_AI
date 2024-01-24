@@ -1,6 +1,24 @@
-import { query } from "../models/index.models.js";
+import { WriteErrLog } from "../helpers/index.helpers.js";
+import { FolderInCloudinary } from "../interfaces/enum.interfaces.js";
+import { UploadImage } from "../services/cloudinary.services.js";
 
 export async function test(req, res, next) {
-    await query("Select * from Menu");
-    res.json("Wath log message")
-}
+
+    
+    // let result = await UploadImage(FolderInCloudinary.ModelsImages, req.file.buffer);
+    // console.log(result);
+    const buffers = req.files;
+    console.log(buffers);
+    var isErro = false;
+    buffers.forEach(buffer => {
+        const promiseUpload = UploadImage(FolderInCloudinary.RedListImages,  buffer.buffer);
+        promiseUpload
+            .then((value) => {
+                console.log(value);
+            })
+            .catch((err) => {
+                console.log(err);
+                isErro = true;
+                WriteErrLog(err);
+            });
+    });}

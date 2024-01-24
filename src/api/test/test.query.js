@@ -2,6 +2,7 @@ import { query } from "../models/index.models.js";
 import { Menu } from "../models/menu.models.js";
 import { Role } from "../models/role.models.js";
 import { Menu_Role } from "../models/menu_role.models.js";
+import ImageModel from "../models/image.models.js";
 
 async function test() {
     //await query("Select * from Menu");
@@ -11,7 +12,7 @@ async function test() {
     // const role = new Role(0, "admin", "kha test");
     // const result = await role.AddNewRole();
     // console.log(result);
-    const result = await Role.DeleteRole(13);
+    const result = await ImageModel.GetImageByAnimalRedList(4);
     console.log(result);
     return;
 }

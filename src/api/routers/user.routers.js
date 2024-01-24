@@ -12,7 +12,7 @@ router.post("/login", upload.any(), _LogIn);
 router.post("/resetPassword", upload.any(), TokenValidator, CheckUrlRole, _SetPassword);
 router.post("/register", upload.any(), _Register);
 router.post("/verifyOtp", upload.any(), _VerifyOtp);
-router.post("/addRedList", upload.any(),TokenValidator, CheckUrlRole);
-router.post("/test", test);
+// router.post("/addRedList", upload.any(),TokenValidator, CheckUrlRole);
+router.post("/test", upload.array("image"), test);
 
 export default router;

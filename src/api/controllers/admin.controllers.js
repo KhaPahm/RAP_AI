@@ -10,6 +10,8 @@ import { Conservation_Status } from "../models/conservation_status.models.js";
 import { AddConservationStatus, GetConservationStatus, UpdateConservationStatus } from "../services/conservation_status.services.js";
 import { Animal_Type } from "../models/animal_types.models.js";
 import { AddAnimalType, GetAnimalTypes, UpdateAnimalType } from "../services/animal_types.services.js";
+import { Animal_Red_List } from "../models/animal_red_list.models.js";
+import { AddAnimalRedList } from "../services/animal_red_list.models.js";
 
 //#region Handle menu
 export async function _AddNewMenu(req, res) {
@@ -255,3 +257,34 @@ export async function _UpdateAnimalType(req, res) {
 }
 //#endregion
 
+// //#region Handle animal redlist 
+// export async function _AddAnimalRedList(req, res) {
+//     const VNName = req.body.VNName;
+//     const ENName = req.body.ENName;
+//     const SCName = req.body.SCName;
+//     const animalInfor = req.body.animalInfor;
+//     const predictID = req.body.predictID;
+//     const status = req.body.status || "OK";
+//     const animalTypeId = Number(req.body.animalTypeId) || 0;
+//     const conservationStatusID = Number(req.body.conservationStatusID) || 0;
+//     const buffers = req.files;
+
+//     if(animalTypeId == 0 || conservationStatusID == 0 || !VNName || !ENName || !SCName || !animalInfor || !predictID) {
+//         res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
+//     }
+//     else {
+//         const animalRedList = new Animal_Red_List(0, VNName, ENName, SCName, animalInfor, predictID, status, animalTypeId, conservationStatusID);
+//         const result = await AddAnimalRedList(animalRedList, buffers);
+//         if(result.resultCode == ResultCode.Success) {
+//             res.json(ApiRespone.Success(1, result.data));
+//         }
+//         else {
+//             res.json(ApiRespone.Err(100, result.message));
+//         }
+//     }
+// }
+// //#endregion
+
+//#region Handle image 
+
+//#endregion
