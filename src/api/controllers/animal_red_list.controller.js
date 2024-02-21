@@ -1,5 +1,5 @@
 import { ResultCode, Status } from "../interfaces/enum.interfaces.js";
-import { GetAnimalRedList, UpdateAnimalRedList } from "../services/animal_red_list.models.js";
+import { GetAnimalRedList, PredictAnimal, UpdateAnimalRedList } from "../services/animal_red_list.models.js";
 import ApiRespone from "../interfaces/api.respone.interfaces.js";
 import { Animal_Red_List } from "../models/animal_red_list.models.js";
 
@@ -69,5 +69,16 @@ export async function _UpdateAnimalRedList(req, res) {
         else {
             res.json(ApiRespone.Err(100, result.message));
         }
+    }
+}
+
+export async function _PredictAnimal(req, res) {
+    const buffer = req.file.buffer;
+    const result = await PredictAnimal(buffer);
+    if(result.resultCode == ResultCode.Success) {
+        res.json(ApiRespone.Success(1, result.data));
+    }
+    else {
+        res.json(ApiRespone.Err(100, result.message));
     }
 }

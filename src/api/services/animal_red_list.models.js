@@ -78,3 +78,8 @@ export async function UpdateAnimalRedList(animal = new Animal_Red_List(), buffer
     animal.images = imagesResult.data;
     return new Result(ResultCode.Success, "Success", animal);
 }
+
+export async function PredictAnimal(buffer) {
+    const result = await Animal_Red_List.PredictAnimal(buffer);
+    return result;
+}
