@@ -168,7 +168,7 @@ export class Animal_Red_List {
                         where arl.predict_id = ${predict_id} and arl.status = "${status}"`;
 
         const result = await query(strQuery);
-        if(result.resultCode == ResultCode.Success) {
+        if(result.resultCode == ResultCode.Success && result.data.length > 0) {
             const images = await ImageModel.GetImageByAnimalRedList(result.data[0].animal_red_list_id);
             if(images.resultCode == ResultCode.Success) {
                 // const lstImagePath = [];
@@ -180,6 +180,7 @@ export class Animal_Red_List {
             }
             return images;
         }
+
     }
 
     

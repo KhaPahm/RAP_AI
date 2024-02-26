@@ -35,7 +35,7 @@ export async function _GetAnimalRedList(req, res) {
 
     const result = await GetAnimalRedList(animalRedListId, status);
     if(result.resultCode == ResultCode.Success) {
-        res.json(ApiRespone.Success(1, result.data));
+        res.json(ApiRespone.Success(result.data.length, result.data));
     }
     else {
         res.json(ApiRespone.Err(100, result.message));

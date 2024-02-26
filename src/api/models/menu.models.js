@@ -86,6 +86,6 @@ export class Menu {
             return new Result(ResultCode.Err, "Menu cập nhật bị trùng, vui lòng thử lại!", null);
         }
 
-        return new Result(ResultCode.Err, "Erro when add new role!", null);
+        return new Result(ResultCode.Err, "Erro when update menu!", null);
     }
 }

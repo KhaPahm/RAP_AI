@@ -20,3 +20,17 @@ export async function UploadImage(folderPath = FolderInCloudinary.ModelsImages, 
       streamifier.createReadStream(buffer).pipe(stream);
     });
 }
+
+export async function DeleteImage(folderPath, fileName) {
+  var path = folderPath + "/" + fileName;
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy( 
+      fileName, (error, result) => {
+      if (result) {
+        resolve(result);
+      } else {
+        reject(error);
+      }
+    });
+  })
+}

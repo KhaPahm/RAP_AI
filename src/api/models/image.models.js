@@ -58,8 +58,18 @@ export default class ImageModel {
     }
 
     static async GetImageByAnimalRedList(animal_red_list_id = 0, status = Status.OK) {
-        const result = await query(`SELECT * FROM Image WHERE animal_red_list_id = ${animal_red_list_id} AND image_type = "${ImageType.System}" and status = "${status}"`)
+        const result = await query(`SELECT image_id, image_local_path, image_public_path, description, image_type, status FROM Image WHERE animal_red_list_id = ${animal_red_list_id} AND image_type = "${ImageType.System}" and status = "${status}"`);
 
+        return result;
+    }
+
+    static async GetImageByReportId(report_id = 0, status = Status.OK) {
+        const result = await query(`SELECT image_id, image_local_path, image_public_path, description, image_type, status FROM Image WHERE report_id = ${report_id} AND image_type = "${ImageType.Report}" and status = "${status}"`);
+        return result;
+    }
+
+    static async DeleteImageByReportId(report_id = 0) {
+        const result = await query(`DELETE FROM Image where report_id = ${report_id};`);
         return result;
     }
 }
