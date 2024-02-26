@@ -68,6 +68,7 @@ export class UserInfor {
 				const role = await Menu.GetListMenuPath(result.data[0].user_id);
 				const accessToken = await UserInfor.GenToken({
 					userId: result.data[0].user_id, 
+					userName: result.data[0].user_name, 
 					role: role
 				});
 				const avt = await ImageModel.GetImage(result.data[0].avt);
@@ -93,8 +94,8 @@ export class UserInfor {
 		return new Result(ResultCode.Err, "Lỗi quá trình đăng nhập!", null);
 	}
 
-	static async ResetPassword(userName = "", oldPassword = "", newPassword = "") {
-		const strQuery = `SELECT * FROM User WHERE user_name = "${userName}" AND status = "OK"`;
+	static async ResetPassword(userId = 0, oldPassword = "", newPassword = "") {
+		const strQuery = `SELECT * FROM User WHERE user_id = "${userId}" AND status = "OK"`;
 		const result = await query(strQuery);
 		if(result.resultCode == ResultCode.Success && result.data.length != 0) {
 			//So sánh password

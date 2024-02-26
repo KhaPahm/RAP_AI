@@ -16,11 +16,11 @@ export async function _LogIn(req, res) {
 }
 
 export async function _SetPassword(req, res) {
-	const userName = req.user.user_name; //Đổi lại
+	const userId = req.user.userId; //Đổi lại
 	const oldPassword = req.body.oldPassword;
 	const newPassword = req.body.newPassword;
 
-	const result = await RessetPassword(userName, oldPassword, newPassword);
+	const result = await RessetPassword(userId, oldPassword, newPassword);
 	if(result.resultCode != ResultCode.Err) {
 		res.json(APIRespone.Success(0, null));
 	} else {
