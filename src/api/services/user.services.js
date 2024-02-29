@@ -14,6 +14,31 @@ export async function RessetPassword(userName, oldPassword, newPassword) {
 	return _resultReset;
 }
 
+export async function ReSendOTP(userName = "", email = "") {
+	const _resultResend = await UserInfor.ReSendOPT(userName, email);
+	if(_resultResend.resultCode == ResultCode.Success) 
+	{
+		//Gửi mail xác thực
+		const resultEmailSending = await SendingMail(email, "Verify account", `Your OTP is: ${_resultResend.data}`, userName);
+		//Nếu gửi mail thành công
+		if(resultEmailSending == ResultCode.Success) {
+			//Nếu gủi mail khoogn thành công thì xóa mã OTP trong db
+			const reusultClearOTP = await UserInfor.ClearOTP(userName);
+			if(reusultClearOTP != ResultCode.Success)
+				WriteErrLog(reusultClearOTP.message);
+		}
+		resultEmailSending.data = {
+			email,
+			userName
+		}
+
+		return resultEmailSending; //Trả về kết quá gửi mail
+	}
+
+	return _resultResend;
+
+}
+
 export async function Register(userName = "", password = "", email = "", dayOfBirth = "", fullName = "", phoneNumber = "") {
 	const resultRegister = await UserInfor.Register(userName, password, email, dayOfBirth, fullName, phoneNumber);
 	//Nếu ghi dữ liệu vào db thành công thì gửi mail xác thực

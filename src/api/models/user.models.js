@@ -119,7 +119,7 @@ export class UserInfor {
 
 	static async Register(userName = "", password = "", email = "", dayOfBirth = "", fullName = "", phoneNumber = "") {
 		//Kieemr tra user da ton tai hay chua
-		const strQueryCheckUser = `SELECT * FROM User WHERE (user_name = "${userName}" OR email = "${email}")`;
+		const strQueryCheckUser = `SELECT * FROM User WHERE email = "${email}"`;
 		const result = await query(strQueryCheckUser);
 		var resetOtp = false;
 		if(result.data.length != 0) {
@@ -137,14 +137,26 @@ export class UserInfor {
 		const hashedPassword = await UserInfor.HashPassword(password);
 		var resultRegister;
 		if(resetOtp == true) {
-			const strQueryUpdate = 
-			`UPDATE User SET password = "${hashedPassword}", 
-							 email = "${email}", 
-							 day_of_birth = "${dayOfBirth}", 
-							 full_name = "${fullName}", 
-							 phone_number = "${phoneNumber}", 
-							 otp = "${otp}",
-							 otp_exp = ${otp_exp} where user_id = ${result.data[0].user_id}`;
+			let strQueryUpdate = "";
+			if(result.data[0].user_name == userName) {
+				strQueryUpdate = `UPDATE User SET password = "${hashedPassword}", 
+								email = "${email}", 
+								day_of_birth = "${dayOfBirth}", 
+								full_name = "${fullName}", 
+								phone_number = "${phoneNumber}", 
+								otp = "${otp}",
+								otp_exp = ${otp_exp} where user_id = ${result.data[0].user_id}`;
+			}
+			else {
+				strQueryUpdate = `UPDATE User SET password = "${hashedPassword}", 
+								user_name = "${userName}",
+								email = "${email}", 
+								day_of_birth = "${dayOfBirth}", 
+								full_name = "${fullName}", 
+								phone_number = "${phoneNumber}", 
+								otp = "${otp}",
+								otp_exp = ${otp_exp} where user_id = ${result.data[0].user_id}`;
+			}
 			resultRegister = await query(strQueryUpdate);
 		}
 		else {
@@ -191,6 +203,20 @@ export class UserInfor {
 		return new Result(ResultCode.Warning, "Lỗi xác thực!")
 	}
 
+	static async ReSendOPT(user_name = "", email = "") {
+		const strQuery = `SELECT user_id FROM User WHERE user_name = "${user_name}" AND email = "${email}" AND status = "WT"`;
+		const result = await query(strQuery);
+		if(result.resultCode == ResultCode.Success && result.data.length == 1) { 
+			const otp = Math.floor(Math.random() * 99999999).toString();
+			const currentDate = new Date();
+			const otp_exp = currentDate.getTime() + 300000; //5p
+			const strQueryUpdate = `UPDATE User SET otp = "${otp}", otp_exp = ${otp_exp} where user_id = ${result.data[0].user_id}`;
+			const resultRegister = await query(strQueryUpdate);
+			return new Result(ResultCode.Success, "Xác thực thành công!", otp);
+		}
+		console.log(result);
+		return new Result(ResultCode.Warning, "Lỗi xác thực!")
+	}
 	//Static method for admin role ---------------------------------------
 	static async AddNewRole(user_id, role_id = 3) {
 		

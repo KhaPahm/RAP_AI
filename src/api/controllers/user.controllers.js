@@ -1,4 +1,4 @@
-import { Login, RessetPassword, Register, VerifyOTP } from "../services/user.services.js";
+import { Login, RessetPassword, Register, VerifyOTP, ReSendOTP } from "../services/user.services.js";
 import APIRespone from "../interfaces/api.respone.interfaces.js";
 import { ResultCode } from "../interfaces/enum.interfaces.js";
 
@@ -53,6 +53,19 @@ export async function _VerifyOtp(req, res) {
 
 	if(result.resultCode == ResultCode.Success) {
 		res.json(APIRespone.Success(0, null));
+	} else {
+		res.json(APIRespone.Err(100, result.message));
+	}
+}
+
+export async function _ReSendOtp(req, res) {
+	const userName = req.body.userName;
+	const email = req.body.email;
+
+	const result = await ReSendOTP(userName, email);
+
+	if(result.resultCode == ResultCode.Success) {
+		res.json(APIRespone.Success(1, result.data));
 	} else {
 		res.json(APIRespone.Err(100, result.message));
 	}
