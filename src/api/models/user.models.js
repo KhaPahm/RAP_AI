@@ -131,7 +131,7 @@ export class UserInfor {
 			}
 		}
 		
-		const otp = Math.floor(Math.random() * 99999999).toString();
+		const otp = Math.floor(Math.random() * 9999).toString();
 		const currentDate = new Date();
 		const otp_exp = currentDate.getTime() + 300000; //5p
 		const hashedPassword = await UserInfor.HashPassword(password);
@@ -207,7 +207,7 @@ export class UserInfor {
 		const strQuery = `SELECT user_id FROM User WHERE user_name = "${user_name}" AND email = "${email}" AND status = "WT"`;
 		const result = await query(strQuery);
 		if(result.resultCode == ResultCode.Success && result.data.length == 1) { 
-			const otp = Math.floor(Math.random() * 99999999).toString();
+			const otp = Math.floor(Math.random() * 9999).toString();
 			const currentDate = new Date();
 			const otp_exp = currentDate.getTime() + 300000; //5p
 			const strQueryUpdate = `UPDATE User SET otp = "${otp}", otp_exp = ${otp_exp} where user_id = ${result.data[0].user_id}`;
