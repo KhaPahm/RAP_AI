@@ -7,7 +7,7 @@ import { _GetAnimalRedList, _PredictAnimal } from "../controllers/animal_red_lis
 const upload = Multer();
 const router = Router();
 
-router.post("/getAnimalRedList", upload.any(), TokenValidator, CheckUrlRole, _GetAnimalRedList);
-router.post("/predictAnimal", upload.single("image"), TokenValidator, _PredictAnimal);
+router.post("/getAnimalRedList", upload.any(), _GetAnimalRedList);
+router.post("/predictAnimal", upload.single("image"), _PredictAnimal);
 
 export default router;

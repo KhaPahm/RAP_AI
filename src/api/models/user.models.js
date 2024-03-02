@@ -33,7 +33,8 @@ export class UserInfor {
 
 	static async GenToken (payload, accessToken = true) {
 		const options = {
-			expiresIn: accessToken ? "10m" : "14d"
+			// expiresIn: accessToken ? "10m" : "14d"
+			expiresIn: "14d"
 		};
 	
 		const secrectSign = accessToken ? 

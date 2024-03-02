@@ -78,6 +78,9 @@ export async function _PredictAnimal(req, res) {
     if(result.resultCode == ResultCode.Success) {
         res.json(ApiRespone.Success(1, result.data));
     }
+    else if(result.resultCode == ResultCode.Warning) {
+        res.json(new ApiRespone(0, result.data, 0, result.message))
+    }
     else {
         res.json(ApiRespone.Err(100, result.message));
     }
