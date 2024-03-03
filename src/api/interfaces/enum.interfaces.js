@@ -35,3 +35,8 @@ export const ActionReport = Object.freeze({
     Denied: "DENIED",
     Success: "SUCCESS"
 });
+
+export const AnimalSearchTypes = Object.freeze({
+    Search: "SER",
+    Predict: "AIC"
+})

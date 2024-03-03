@@ -1,9 +1,12 @@
 import { WriteErrLog } from "../helpers/index.helpers.js";
 import { Result } from "../interfaces/api.respone.interfaces.js";
-import { FolderInCloudinary, ImageType, ResultCode, Status } from "../interfaces/enum.interfaces.js";
+import { AnimalSearchTypes, FolderInCloudinary, ImageType, ResultCode, Status } from "../interfaces/enum.interfaces.js";
 import { Animal_Red_List } from "../models/animal_red_list.models.js";
+import { History_Watch } from "../models/history_watch.js";
 import ImageModel from "../models/image.models.js";
 import { UploadImage } from "./cloudinary.services.js";
+import { ConverDateTimeToString } from "../helpers/string.helpers.js";
+
 
 export async function AddAnimalRedList(animal = new Animal_Red_List(), buffers = []) {
     const result = await animal.AddAnimalRedList();
@@ -40,8 +43,16 @@ export async function AddAnimalRedList(animal = new Animal_Red_List(), buffers =
     return new Result(ResultCode.Success, "Success", animal);
 }
 
-export async function GetAnimalRedList(id = 0, status = Status.OK) {
+export async function GetAnimalRedList(id = 0, status = Status.OK, user_id = 0) {
     const result = await Animal_Red_List.GetAnimalRedList(id, status);
+    if(id != 0 && user_id != 0 && result.resultCode == ResultCode.Success) {
+        const history = new History_Watch(user_id, result.data.animal_red_list_id, ConverDateTimeToString(new Date), AnimalSearchTypes.Search, null);
+        if(await history.CheckHistory()) {
+            await history.UpdateHistory();
+        } else {
+            await history.AddNewHistory();
+        }
+    }
     return result;
 }
 
@@ -79,7 +90,20 @@ export async function UpdateAnimalRedList(animal = new Animal_Red_List(), buffer
     return new Result(ResultCode.Success, "Success", animal);
 }
 
-export async function PredictAnimal(buffer) {
+export async function PredictAnimal(buffer, user_id = 0) {
     const result = await Animal_Red_List.PredictAnimal(buffer);
-    return result;
+    if(user_id != 0 && result.resultCode == ResultCode.Success) {
+        const history = new History_Watch(user_id, result.data[0].animal_red_list_id, ConverDateTimeToString(new Date), "AIC", result.data[1]);
+        if(await history.CheckHistory()) {
+            await history.UpdateHistory();
+        } else {
+            await history.AddNewHistory();
+        }
+    }
+    return new Result(result.resultCode, result.message, result.data[0]);
+}
+
+export async function SearchAnimalRedList(name = "") {
+    const animals = await Animal_Red_List.SearchAnimalRedList(name);
+    return animals;
 }

@@ -112,7 +112,7 @@ export class Animal_Red_List {
                         where arl.animal_red_list_id = ${id} and arl.status = "${status}"`;
         }
         const result = await query(strQuery);
-        if(result.resultCode == ResultCode.Success && id != 0) {
+        if(result.resultCode == ResultCode.Success && id != 0 && result.data.length > 0) {
             const images = await ImageModel.GetImageByAnimalRedList(result.data[0].animal_red_list_id);
             if(images.resultCode == ResultCode.Success) {
                 // const lstImagePath = [];
@@ -151,8 +151,53 @@ export class Animal_Red_List {
         return result;
     }
 
-    static async GetAnimalRedListByPredictId(predict_id = 0, status = Status.OK) {
-        
+    static async SearchAnimalRedList(name = "") {
+        var strQuery = "";
+        strQuery = `select arl.animal_red_list_id, 
+                                arl.vn_name,
+                                arl.en_name,
+                                arl.sc_name,
+                                arl.animal_infor,
+                                arl.status,
+                                cs.stand_name as conservation_status ,
+                                aty.type_name as animal_type
+                        from Animal_Red_List arl 
+                        left join Conservation_Status cs 
+                        on arl.conservation_status_id = cs.conservation_status_id
+                        left join Animal_Types aty 
+                        on arl.animal_type_id = aty.animal_type_id
+                        where arl.vn_name like "%${name}%" OR arl.en_name like "%${name}%"`;
+        const result = await query(strQuery);
+        if(result.resultCode == ResultCode.Success && result.data.length > 0) 
+        {
+            const animals = [];
+            
+            for(var i = 0; i < result.data.length; i++) {
+                const animal = result.data[i];
+                const a = new Animal_Red_List(animal.animal_red_list_id, 
+                    animal.vn_name,
+                    animal.en_name,
+                    animal.sc_name,
+                    animal.animal_infor,
+                    animal.status,
+                    animal.animal_type,
+                    animal.conservation_status,
+                    )
+                const images = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
+                if(images.resultCode == ResultCode.Success) {
+                a.images = images.data;
+                }  
+                animals.push(a);
+            }
+
+            return new Result(ResultCode.Success, "Success", animals);
+        }
+
+        return result;
+    }
+
+    static async GetAnimalRedListByPredictId(predict_id = 0, rate = 0.0, status = Status.OK) {
+        rate = rate.toFixed(2);
         var strQuery = `select arl.animal_red_list_id, 
                                 arl.vn_name,
                                 arl.en_name,
@@ -177,7 +222,7 @@ export class Animal_Red_List {
                 //     lstImagePath.push(image.image_public_path)
                 // });
                 const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, result.data[0].animal_type, result.data[0].conservation_status, images.data);
-                return new Result(ResultCode.Success, "Success", animalRedList)
+                return new Result(ResultCode.Success, "Success", [animalRedList, rate])
             }
             
             return images;
@@ -197,8 +242,9 @@ export class Animal_Red_List {
             .toFloat()
             .expandDims();
 
-        const prediction = model.predict(tensor)
+        const prediction = model.predict(tensor);
+        const rate = prediction.dataSync()[0];
         const result = prediction.as1D().argMax().dataSync()[0];
-        return await this.GetAnimalRedListByPredictId(result+1);
+        return await this.GetAnimalRedListByPredictId(result+1, rate*100);
     }
 }

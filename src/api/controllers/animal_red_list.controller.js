@@ -1,5 +1,5 @@
 import { ResultCode, Status } from "../interfaces/enum.interfaces.js";
-import { GetAnimalRedList, PredictAnimal, UpdateAnimalRedList } from "../services/animal_red_list.models.js";
+import { GetAnimalRedList, PredictAnimal, SearchAnimalRedList, UpdateAnimalRedList } from "../services/animal_red_list.models.js";
 import ApiRespone from "../interfaces/api.respone.interfaces.js";
 import { Animal_Red_List } from "../models/animal_red_list.models.js";
 
@@ -29,13 +29,26 @@ export async function _AddAnimalRedList(req, res) {
     }
 }
 
+export async function _SearchAnimalRedList(req, res) {
+    const name = req.body.name ?? "";
+    
+    const result = await SearchAnimalRedList(name);
+    if(result.resultCode == ResultCode.Success) {
+        res.json(ApiRespone.Success(result.data.length, result.data));
+    }
+    else {
+        res.json(ApiRespone.Err(100, result.message));
+    }
+}
+
 export async function _GetAnimalRedList(req, res) {
+    const userId = req.user ? req.user.userId : 0;
     const animalRedListId = req.body.animalRedListId || 0;
     const status = req.body.status || Status.OK;
 
-    const result = await GetAnimalRedList(animalRedListId, status);
+    const result = await GetAnimalRedList(animalRedListId, status, userId);
     if(result.resultCode == ResultCode.Success) {
-        res.json(ApiRespone.Success(result.data.length, result.data));
+        res.json(ApiRespone.Success(result.data.length ? result.data.length : 1, result.data));
     }
     else {
         res.json(ApiRespone.Err(100, result.message));
@@ -73,8 +86,10 @@ export async function _UpdateAnimalRedList(req, res) {
 }
 
 export async function _PredictAnimal(req, res) {
+    const userId = req.user ? req.user.userId : 0;
     const buffer = req.file.buffer;
-    const result = await PredictAnimal(buffer);
+    console.log(userId);
+    const result = await PredictAnimal(buffer, userId);
     if(result.resultCode == ResultCode.Success) {
         res.json(ApiRespone.Success(1, result.data));
     }
