@@ -224,11 +224,11 @@ export class Animal_Red_List {
                 const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, result.data[0].animal_type, result.data[0].conservation_status, images.data);
                 return new Result(ResultCode.Success, "Success", [animalRedList, rate])
             }
+            return new Result(ResultCode.Err, "Lỗi tải ảnh!", [null,null])
             
-            return images;
         }
         else {
-            return new Result(ResultCode.Warning, "Không nhận dạng được động vật", null)
+            return new Result(ResultCode.Warning, "Không nhận dạng được động vật", [null, null])
         }
     }
 
