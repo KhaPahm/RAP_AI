@@ -64,7 +64,10 @@ export class History_Watch {
     }
 
     static async GetHistory(user_id = 0) {
-        const strQuery = `SELECT * FROM History_Watch WHERE user_id = ${user_id};`
+        const strQuery = `select hw.*, arl.vn_name, arl.en_name 
+                            from History_Watch hw left join Animal_Red_List arl 
+                            on hw.animal_red_list_id = arl.animal_red_list_id 
+                            where hw.user_id = ${user_id};`
         const result = await query(strQuery);
         return result;
     }
