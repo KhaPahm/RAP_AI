@@ -4,6 +4,7 @@ import { Status } from "../interfaces/enum.interfaces.js";
 import { query } from "./index.models.js";
 import { Result } from "../interfaces/api.respone.interfaces.js";
 import { ResultCode } from "../interfaces/enum.interfaces.js";
+import ImageModel from "./image.models.js";
 
 export class History_Watch {
     constructor (user_id = 0, animal_red_list_id = 0, watch_time = ConverDateTimeToString(new Date()), search_type = AnimalSearchTypes.Predict, ratio_search = null) {
@@ -11,7 +12,10 @@ export class History_Watch {
         this.animal_red_list_id = animal_red_list_id,
         this.watch_time = watch_time,
         this.search_type = search_type,
-        this.ratio_search = ratio_search
+        this.ratio_search = ratio_search,
+        this.vn_name = "",
+        this.en_name = "",
+        this.img = ""
     }
 
     async CheckHistory() {
@@ -68,7 +72,31 @@ export class History_Watch {
                             from History_Watch hw left join Animal_Red_List arl 
                             on hw.animal_red_list_id = arl.animal_red_list_id 
                             where hw.user_id = ${user_id};`
+
         const result = await query(strQuery);
+        if(result.resultCode == ResultCode.Success && result.data.length > 0) {
+            var dt = result.data;
+                var lsHistory = []
+
+            for(var i = 0; i < dt.length; i++) {
+                var history = new History_Watch(dt[i].user_id, dt[i].animal_red_list_id, dt[i].watch_time, dt[i].search_type, dt[i].ratio_search);
+                history.en_name = dt[i].en_name;
+                history.vn_name = dt[i].vn_name;
+                const resultGetImage = await ImageModel.GetImageByAnimalRedList(dt[i].animal_red_list_id);
+                if(resultGetImage.resultCode == ResultCode.Success) {
+                    history.img = resultGetImage.data[0].image_public_path;
+                }
+                else {
+                    history.img = "";
+                }
+
+                lsHistory.push(history)
+            }
+            
+            console.log(lsHistory);
+            result.data = lsHistory;
+        }
+
         return result;
     }
 }
