@@ -123,6 +123,9 @@ export class UserInfor {
 		if(result.resultCode == ResultCode.Success) {
 			const refreshToken = result.data[0].refresh_token;
 
+			if(refreshToken == "") 
+				return new Result(ResultCode.Err, "Invalid", null);
+
 			const payloafRefresh = await jwt.verify(refreshToken, process.env.JWT_SIGN_REFRESH_KEY);
 			if(payloafRefresh == "Expired") {
 				return new Result(ResultCode.Err, "Expried", null);
