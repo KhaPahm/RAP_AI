@@ -15,6 +15,16 @@ export async function Login(userName = "", password = "") {
 	return _userInfor;
 }
 
+export async function Logout(userId) {
+	const _userInfor = await UserInfor.Logout(userId);
+	return _userInfor;
+}
+
+export async function ExpandToken(userId, dateLogin) {
+	const result = await UserInfor.ExpandToken(userId, dateLogin)
+	return result
+}
+
 export async function RessetPassword(userName, oldPassword, newPassword) {
 	const _resultReset = await UserInfor.ResetPassword(userName, oldPassword, newPassword);
 	return _resultReset;

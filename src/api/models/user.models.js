@@ -31,10 +31,10 @@ export class UserInfor {
 		this.role = role;
 	}
 
-	static async GenToken (payload, accessToken = true) {
+	static async GenToken (payload, accessToken = true, exp = "30s") {
 		const options = {
 			// expiresIn: accessToken ? "10m" : "14d"
-			expiresIn: "14d"
+			expiresIn: exp
 		};
 	
 		const secrectSign = accessToken ? 
@@ -65,15 +65,26 @@ export class UserInfor {
 			const match = await compare(password, result.data[0].password);
 			//Nếu như mật khẩu match
 			if(match) {
+				const loginDate = Date.now();
 				//Tạo access token
 				const role = await Menu.GetListMenuPath(result.data[0].user_id);
 				const accessToken = await UserInfor.GenToken({
 					userId: result.data[0].user_id, 
 					userName: result.data[0].user_name, 
+					loginDate: loginDate,
 					role: role
 				});
 				const avt = await ImageModel.GetImage(result.data[0].avt);
 				
+				//Tạo refreshToken
+				const refreshToken = await UserInfor.GenToken({
+					userId: result.data[0].user_id, 
+					userName: result.data[0].user_name, 
+					loginDate: loginDate,
+				}, false, "14d");
+
+				await query(`UPDATE User SET refresh_token = "${refreshToken}" WHERE user_id = ${result.data[0].user_id}`);
+
 				//Trả về thông tin user
 				return new Result(ResultCode.Success, "Success", new UserInfor(
 					result.data[0].user_id, 
@@ -93,6 +104,47 @@ export class UserInfor {
 		}
 
 		return new Result(ResultCode.Err, "Lỗi quá trình đăng nhập!", null);
+	}
+
+	static async Logout(userId) {
+		const strQuery = `UPDATE User SET refresh_token = "" WHERE user_id = ${userId}`;
+		const result = await query(strQuery);
+		if(result.resultCode == ResultCode.Success) {
+			return new Result(ResultCode.Success, "Đăng xuất thành công", null);
+		}
+		else {
+			return new Result(ResultCode.Warning, "Có lỗi trong quá trình đăng xuất", null);
+		}
+	}
+
+	static async ExpandToken(userId, dateLogin) {
+		const strQuery = `Select refresh_token, user_name from User WHERE user_id = ${userId}`;
+		const result = await query(strQuery);
+		if(result.resultCode == ResultCode.Success) {
+			const refreshToken = result.data[0].refresh_token;
+
+			const payloafRefresh = await jwt.verify(refreshToken, process.env.JWT_SIGN_REFRESH_KEY);
+			if(payloafRefresh == "Expired") {
+				return new Result(ResultCode.Err, "Expried", null);
+			}
+			else {
+				if(dateLogin < payloafRefresh.loginDate) {
+					return new Result(ResultCode.Err, "Invalid", null);
+				}
+			}
+			const role = await Menu.GetListMenuPath(userId);
+			const accessToken = await UserInfor.GenToken({
+				userId: userId, 
+				userName: result.data[0].user_name, 
+				loginDate: Date.now(),
+				role: role
+			});
+
+			return new Result(ResultCode.Success, "Gia hạn thành công", {newToken: accessToken});
+		}
+		else {
+			return new Result(ResultCode.Warning, "Lỗi xác thực", null);
+		}
 	}
 
 	static async ResetPassword(userId = 0, oldPassword = "", newPassword = "") {
@@ -246,4 +298,5 @@ export class UserInfor {
 	static async AddRoleForAccount() {
 
 	}
+
 }

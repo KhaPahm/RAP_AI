@@ -1,4 +1,4 @@
-import { Login, RessetPassword, Register, VerifyOTP, ReSendOTP, UpdateUser } from "../services/user.services.js";
+import { Login, RessetPassword, Register, VerifyOTP, ReSendOTP, UpdateUser, Logout, ExpandToken } from "../services/user.services.js";
 import APIRespone from "../interfaces/api.respone.interfaces.js";
 import { FolderInCloudinary, ResultCode } from "../interfaces/enum.interfaces.js";
 import { UserInfor } from "../models/user.models.js";
@@ -14,6 +14,27 @@ export async function _LogIn(req, res) {
 		res.json(APIRespone.Success(1, userInfor.data));
 	} else {
 		res.json(APIRespone.Err(100, userInfor.message));
+	}
+}
+
+export async function _Logout(req, res) {
+	const userId = req.user ? req.user.userId : 0;
+	const result = await Logout(userId);
+	if (result.resultCode == ResultCode.Success) {
+		res.json(APIRespone.Success(0, null));
+	} else {
+		res.json(APIRespone.Err(100, result.message));
+	}
+}
+
+export async function _ExpandToken(req, res) {
+	const userId = req.user ? req.user.userId : 0;
+	const dateLogin = req.user ? req.user.loginDate : 0;
+	const result = await ExpandToken(userId, dateLogin);
+	if (result.resultCode == ResultCode.Success) {
+		res.json(APIRespone.Success(1, result.data));
+	} else {
+		res.json(APIRespone.Err(100, result.message));
 	}
 }
 
