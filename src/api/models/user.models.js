@@ -31,7 +31,7 @@ export class UserInfor {
 		this.role = role;
 	}
 
-	static async GenToken (payload, accessToken = true, exp = "30s") {
+	static async GenToken (payload, accessToken = true, exp = "1d") {
 		const options = {
 			// expiresIn: accessToken ? "10m" : "14d"
 			expiresIn: exp
