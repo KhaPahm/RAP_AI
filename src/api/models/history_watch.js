@@ -54,7 +54,7 @@ export class History_Watch {
         const strQuery = `UPDATE History_Watch SET 
                                 watch_time = "${this.watch_time}",
                                 ratio_search = ${this.ratio_search},
-                                search_type = "${this.search_type}"
+                                search_type = "${this.search_type}",
                             WHERE user_id = ${this.user_id} && animal_red_list_id = ${this.animal_red_list_id}
                             `; 
         const result = await query(strQuery);
@@ -67,7 +67,7 @@ export class History_Watch {
         return new Result(ResultCode.Err, "Erro when update history!", null);
     }
 
-    static async GetHistory(user_id = 0) {
+    static async GetHistory(user_id = 0, status = Status.OK) {
         const strQuery = `select hw.*, arl.vn_name, arl.en_name 
                             from History_Watch hw left join Animal_Red_List arl 
                             on hw.animal_red_list_id = arl.animal_red_list_id 
@@ -93,10 +93,15 @@ export class History_Watch {
                 lsHistory.push(history)
             }
             
-            console.log(lsHistory);
             result.data = lsHistory;
         }
 
+        return result;
+    }
+
+    static async SetStatusForHistory(user_id, animal_red_list_id, status = Status.OK) {
+        const strQuery = `Delete From History_Watch WHERE user_id = ${user_id} && animal_red_list_id = ${animal_red_list_id}`;
+        const result = await query(strQuery);
         return result;
     }
 }
