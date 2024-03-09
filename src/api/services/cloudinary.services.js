@@ -1,7 +1,10 @@
 import {v2 as cloudinary} from "cloudinary";
 import streamifier from "streamifier";
-import { FolderInCloudinary } from "../interfaces/enum.interfaces.js";
+import { FolderInCloudinary, ImageType, Status } from "../interfaces/enum.interfaces.js";
 import { CloudinaryConfig } from "../../config/cloudinary.config.js";
+import ImageModel from "../models/image.models.js";
+import { ConverDateTimeToString } from "../helpers/string.helpers.js";
+import { UserInfor } from "../models/user.models.js";
 cloudinary.config(CloudinaryConfig);
 
 export async function UploadImage(folderPath = FolderInCloudinary.ModelsImages, buffer) {
@@ -16,6 +19,26 @@ export async function UploadImage(folderPath = FolderInCloudinary.ModelsImages, 
             }
           }
         );
+
+      streamifier.createReadStream(buffer).pipe(stream);
+    });
+}
+
+export async function UpdateAvt(folderPath, buffer, userId) {
+    return new Promise((resolve, reject) => {
+      let stream = cloudinary.uploader.upload_stream(
+      { folder: folderPath },
+        async (error, result) => {
+          if (result) {
+            const newImage = await new ImageModel(0, result.url, result.url, `${userId} - ${ConverDateTimeToString()}`, ImageType.Avata, Status.OK, null, userId);
+            const resultAddImge = await newImage.AddNewImage();
+				    const resultUpdateAvt = UserInfor.UpdateAvt(userId, resultAddImge.data.image_id);
+            resolve(result);
+          } else {
+            reject(error);
+          }
+        }
+      );
 
       streamifier.createReadStream(buffer).pipe(stream);
     });

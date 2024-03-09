@@ -1,6 +1,8 @@
-import { Login, RessetPassword, Register, VerifyOTP, ReSendOTP } from "../services/user.services.js";
+import { Login, RessetPassword, Register, VerifyOTP, ReSendOTP, UpdateUser } from "../services/user.services.js";
 import APIRespone from "../interfaces/api.respone.interfaces.js";
-import { ResultCode } from "../interfaces/enum.interfaces.js";
+import { FolderInCloudinary, ResultCode } from "../interfaces/enum.interfaces.js";
+import { UserInfor } from "../models/user.models.js";
+import { UpdateAvt } from "../services/cloudinary.services.js";
 
 export async function _LogIn(req, res) {
 	const userName = req.body.userName;
@@ -69,4 +71,40 @@ export async function _ReSendOtp(req, res) {
 	} else {
 		res.json(APIRespone.Err(100, result.message));
 	}
+}
+
+export async function _UpdateUser(req, res) {
+	const userId = req.user ? req.user.userId : 0;
+	const dayOfBirth = req.body.dayOfBirth || "";
+	const fullName = req.body.fullName || "";
+	const phoneNumber = req.body.phoneNumber || "";
+	if(userId == "" || dayOfBirth == "" || fullName == "") {
+		res.json(APIRespone.Err(100, "Dữ liệu cập nhật không đủ thông tin!"));
+	}
+	else {
+		const user = new UserInfor(userId, "", "", null, "", dayOfBirth, fullName, phoneNumber);
+		const result = await UpdateUser(user);
+		if(result.resultCode == ResultCode.Success) {
+			res.json(APIRespone.Success(1, {dayOfBirth, fullName, phoneNumber}));
+		} else {
+			res.json(APIRespone.Err(100, result.message));
+		}
+	}
+	
+}
+
+export async function _UpdateAvt(req, res) {
+	const userId = req.user ? req.user.userId : 0;
+    if(!req.file || userId == 0) return res.json(new ApiRespone(100, "Dữ liệu không phù hợp"))
+    const buffer = req.file.buffer;
+	
+	const promiseUpload = UpdateAvt(FolderInCloudinary.UserPersionalImage,  buffer, userId);
+        promiseUpload
+            .then((value) => {
+                res.json(APIRespone.Success(1, {img: value.url}));
+            })
+            .catch((err) => {
+                WriteErrLog(err);
+				res.json(APIRespone.Err(100, "Lỗi quá trình cập nhật ảnh đại diện!"));
+            });
 }

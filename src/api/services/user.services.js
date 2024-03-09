@@ -1,8 +1,14 @@
 
 import { WriteErrLog } from "../helpers/index.helpers.js";
-import { ResultCode } from "../interfaces/enum.interfaces.js";
+import { ConverDateTimeToString } from "../helpers/string.helpers.js";
+import { Result } from "../interfaces/api.respone.interfaces.js";
+import { FolderInCloudinary, ImageType, ResultCode } from "../interfaces/enum.interfaces.js";
+import ImageModel from "../models/image.models.js";
 import { UserInfor } from "../models/user.models.js";
 import { SendingMail } from "./mail.services.js";
+import { UpdateAvt, UploadImage } from "./cloudinary.services.js";
+import { Status } from "../interfaces/enum.interfaces.js";
+
 
 export async function Login(userName = "", password = "") {
 	const _userInfor = await UserInfor.Login(userName, password);
@@ -71,3 +77,32 @@ export async function VerifyOTP(user_name = "", email = "", otp = 0) {
 	}
 	return resultVerify;
 }
+
+export async function UpdateUser(user = new UserInfor()) {
+	const result =  await user.Update();
+	return result;
+}
+
+// export async function UpdateUserAvt(user = new UserInfor(), buffer) {
+//     var isErro = false;
+// 	var path = "";
+// 	const promiseUpload = UpdateAvt(FolderInCloudinary.UserPersionalImage,  buffer, user.userId);
+//         promiseUpload
+//             .then((value) => {
+//                 path = value.url;
+                
+//             })
+//             .catch((err) => {
+//                 isErro = true;
+//                 WriteErrLog(err);
+//             });
+
+// 	if(isErro) {
+// 		return new Result("Erro", "Lỗi trá trình cập nhật ảnh!")
+// 	}
+
+// 	const resultGetNewAvt = await ImageModel.GetAvtByUserId(user.userId);
+// 	console.log(resultGetNewAvt);
+	
+// 	return new Result(ResultCode.Success, "Success", {img: ""});
+// }

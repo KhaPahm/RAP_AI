@@ -215,9 +215,29 @@ export class UserInfor {
 			const resultRegister = await query(strQueryUpdate);
 			return new Result(ResultCode.Success, "Xác thực thành công!", otp);
 		}
-		console.log(result);
 		return new Result(ResultCode.Warning, "Lỗi xác thực!")
 	}
+
+	async Update() {
+		const strQuery = `UPDATE User SET 
+									full_name = "${this.fullName}",
+									phone_number = "${this.phoneNumber}",
+									day_of_birth = "${this.dayOfBirth}"
+							WHERE user_id = ${this.userId};`;
+		const result = await query(strQuery);
+		
+		return result;
+	}
+
+	static async UpdateAvt(userId, avtId) {
+		const strQuery = `UPDATE User SET 
+								avt = "${avtId}"
+							WHERE user_id = ${userId};`
+		const result = await query(strQuery);
+
+		return result;
+	}
+
 	//Static method for admin role ---------------------------------------
 	static async AddNewRole(user_id, role_id = 3) {
 		

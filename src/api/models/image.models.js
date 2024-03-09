@@ -33,8 +33,9 @@ export default class ImageModel {
     async AddNewImage() {
         const strQuery = `INSERT INTO Image(image_local_path, image_public_path, image_type, description, status, animal_red_list_id, user_id, report_id) 
                         VALUES ("${this.image_local_path}", "${this.image_public_path}", "${this.image_type}", "${this.description}", "${this.status}", ${this.animal_red_list_id}, ${this.user_id}, ${this.report_id})`;
+        
+        console.log(strQuery);
         const result = await query(strQuery);
-
         if(result.resultCode == ResultCode.Success)
         {
             this.image_id = result.data.insertId;
@@ -70,6 +71,11 @@ export default class ImageModel {
 
     static async DeleteImageByReportId(report_id = 0) {
         const result = await query(`DELETE FROM Image where report_id = ${report_id};`);
+        return result;
+    }
+
+    static async GetAvtByUserId(userId = 0) {
+        const result = await query(`SELECT image_public_path FROM Image WHERE user_id = ${userId} ORDER BY image_id LIMIT 1;`);
         return result;
     }
 }
