@@ -116,7 +116,7 @@ export async function _UpdateUser(req, res) {
 
 export async function _UpdateAvt(req, res) {
 	const userId = req.user ? req.user.userId : 0;
-    if(!req.file || userId == 0) return res.json(new ApiRespone(100, "Dữ liệu không phù hợp"))
+    if(!req.file || userId == 0) return res.json(APIRespone.Err(100, "Dữ liệu không phù hợp"))
     const buffer = req.file.buffer;
 	
 	const promiseUpload = UpdateAvt(FolderInCloudinary.UserPersionalImage,  buffer, userId);
