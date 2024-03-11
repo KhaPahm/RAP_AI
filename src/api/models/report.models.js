@@ -61,32 +61,65 @@ export class Report {
     static async GetReportByReportID(report_id = 0, status) {
         var strQuery = "";
         if(report_id == 0 && (status == Status.OK || status == Status.WT || status == Status.XX)) {
-            strQuery = `SELECT rpt.report_id, rpt.title, rpt.description, rpt.report_time, rpt.status, rpt.lat, rpt.lng, img.image_public_path as image 
-                                FROM Report as rpt 
-                                JOIN Image as img
-                                ON rpt.report_id = img.report_id 
-                                WHERE rpt.status = "${status}"`;
+            strQuery = `SELECT rpt.report_id, rpt.title, rpt.description, 
+                                rpt.report_time, rpt.status, rpt.lat, rpt.lng, 
+                                img.image_public_path as image, u.user_name, 
+                                u.phone_number, urpt.action, urpt.user_report_id
+                                                FROM Report as rpt 
+                                                JOIN Image as img
+                                                ON rpt.report_id = img.report_id
+                                                LEFT JOIN User_Report as urpt
+                                                ON urpt.report_id = rpt.report_id
+                                                LEFT JOIN User as u
+                                                ON urpt.user_id = u.user_id
+                                                WHERE rpt.status = "${status}"
+                                                order by urpt.user_report_id DESC LIMIT 1`;
         }
         else if(report_id == 0 && (status != Status.OK && status != Status.WT && status != Status.XX)) {
-            strQuery = `SELECT rpt.report_id, rpt.title, rpt.description, rpt.report_time, rpt.status, rpt.lat, rpt.lng, img.image_public_path as image 
-                                FROM Report as rpt 
-                                JOIN Image as img
-                                ON rpt.report_id = img.report_id`
+            strQuery = `SELECT rpt.report_id, rpt.title, rpt.description, 
+                                rpt.report_time, rpt.status, rpt.lat, rpt.lng, 
+                                img.image_public_path as image, u.user_name, 
+                                u.phone_number, urpt.action, urpt.user_report_id
+                                                FROM Report as rpt 
+                                                JOIN Image as img
+                                                ON rpt.report_id = img.report_id
+                                                LEFT JOIN User_Report as urpt
+                                                ON urpt.report_id = rpt.report_id
+                                                LEFT JOIN User as u
+                                                ON urpt.user_id = u.user_id
+                                                order by urpt.user_report_id DESC LIMIT 1`
                                 ;
         }
         else if(report_id != 0 && (status == Status.OK || status == Status.WT || status == Status.XX)) {
-            strQuery = `SELECT rpt.report_id, rpt.title, rpt.description, rpt.report_time, rpt.status, rpt.lat, rpt.lng, img.image_public_path as image 
-                                FROM Report as rpt 
-                                JOIN Image as img
-                                ON rpt.report_id = img.report_id 
-                                WHERE rpt.report_id = ${report_id} AND rpt.status = "${status}"`;
+            strQuery = `SELECT rpt.report_id, rpt.title, rpt.description, 
+                                rpt.report_time, rpt.status, rpt.lat, rpt.lng, 
+                                img.image_public_path as image, u.user_name, 
+                                u.phone_number, urpt.action, urpt.user_report_id
+                                                FROM Report as rpt 
+                                                JOIN Image as img
+                                                ON rpt.report_id = img.report_id
+                                                LEFT JOIN User_Report as urpt
+                                                ON urpt.report_id = rpt.report_id
+                                                LEFT JOIN User as u
+                                                ON urpt.user_id = u.user_id
+                                                WHERE rpt.report_id = ${report_id} AND rpt.status = "${status}"
+                                                order by urpt.user_report_id DESC LIMIT 1`;
+                                //WHERE rpt.report_id = ${report_id} AND rpt.status = "${status}"`;
         }
         else {
-            strQuery = `SELECT rpt.report_id, rpt.title, rpt.description, rpt.report_time, rpt.status, rpt.lat, rpt.lng, img.image_public_path as image 
-                                FROM Report as rpt 
-                                JOIN Image as img
-                                ON rpt.report_id = img.report_id 
-                                WHERE rpt.report_id = ${report_id}`;
+            strQuery = `SELECT rpt.report_id, rpt.title, rpt.description, 
+                                rpt.report_time, rpt.status, rpt.lat, rpt.lng, 
+                                img.image_public_path as image, u.user_name, 
+                                u.phone_number, urpt.action, urpt.user_report_id
+                                                FROM Report as rpt 
+                                                JOIN Image as img
+                                                ON rpt.report_id = img.report_id
+                                                LEFT JOIN User_Report as urpt
+                                                ON urpt.report_id = rpt.report_id
+                                                LEFT JOIN User as u
+                                                ON urpt.user_id = u.user_id
+                                                WHERE rpt.report_id = ${report_id}
+                                                order by urpt.user_report_id DESC LIMIT 1`; 
         }
 
         const result = await query(strQuery);

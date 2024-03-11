@@ -35,7 +35,7 @@ export async function CreateNewReport(report = new Report(), buffer, userId = 0)
 
     if(isErro){
         report.DeleteReport();
-        return new Result("Erro", "Lỗi trá trình cập nhật ảnh!")
+        return new Result(ResultCode.Err, "Lỗi trá trình cập nhật ảnh!")
     }
 
     const imagesResult = await ImageModel.GetImageByReportId(reportId);
