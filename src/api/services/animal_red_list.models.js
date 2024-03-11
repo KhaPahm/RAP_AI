@@ -8,8 +8,8 @@ import { UploadImage } from "./cloudinary.services.js";
 import { ConverDateTimeToString } from "../helpers/string.helpers.js";
 
 
-export async function AddAnimalRedList(animal = new Animal_Red_List(), buffers = []) {
-    const result = await animal.AddAnimalRedList();
+export async function AddAnimalRedList(animal = new Object(), buffers = []) {
+    const result = await Animal_Red_List.AddAnimalRedList(animal);
     if(result.resultCode != ResultCode.Success) {
         return result;
     }
@@ -39,8 +39,9 @@ export async function AddAnimalRedList(animal = new Animal_Red_List(), buffers =
         return new Result("Erro", "Lỗi trá trình cập nhật ảnh!")
     
     const imagesResult = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
-    animal.images = imagesResult.data;
-    return new Result(ResultCode.Success, "Success", animal);
+
+    const newAnimal = {...animal, images: imagesResult.data};
+    return new Result(ResultCode.Success, "Success", newAnimal);
 }
 
 export async function GetAnimalRedList(id = 0, status = Status.OK, user_id = 0) {

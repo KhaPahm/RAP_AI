@@ -18,7 +18,7 @@ export class Animal_Red_List {
         this.images = images;
     }
 
-    async AddAnimalRedList() {
+    static async AddAnimalRedList(obj) {
         const strQuery = `INSERT INTO Animal_Red_List(
                                 vn_name,
                                 en_name,
@@ -29,20 +29,20 @@ export class Animal_Red_List {
                                 animal_type_id,
                                 conservation_status_id
                             ) VALUES (
-                                "${this.vn_name}",
-                                "${this.en_name}",
-                                "${this.sc_name}",
-                                "${this.animal_infor}",
-                                ${this.predict_id},
-                                "${this.status}",
-                                ${this.animal_type_id},
-                                ${this.conservation_status_id}
+                                "${obj.vn_name}",
+                                "${obj.en_name}",
+                                "${obj.sc_name}",
+                                "${obj.animal_infor}",
+                                ${obj.predict_id},
+                                "${obj.status}",
+                                ${obj.animal_type_id},
+                                ${obj.conservation_status_id}
                             )`;
         const result = await query(strQuery);
         if(result.resultCode == ResultCode.Success)
         {
             this.animal_red_list_id = result.data.insertId;
-            return new Result(ResultCode.Success, "Thêm mới động vật thành công!", this);
+            return new Result(ResultCode.Success, "Thêm mới động vật thành công!", {...obj});
         }
         if(result.resultCode == ResultCode.Warning && result.data.code == "ER_DUP_ENTRY") {
             return new Result(ResultCode.Err, "Động vật đã tồn tại, vui lòng nhập mới", null);

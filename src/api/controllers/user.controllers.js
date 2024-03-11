@@ -34,7 +34,7 @@ export async function _ExpandToken(req, res) {
 	if (result.resultCode == ResultCode.Success) {
 		res.json(APIRespone.Success(1, result.data));
 	} else {
-		res.json(APIRespone.Err(100, result.message));
+		res.status(403).json(APIRespone.Err(100, result.message));
 	}
 }
 

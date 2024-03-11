@@ -6,7 +6,7 @@ export async function TokenValidator(req, res, next) {
     //Kiểm tra accesssToken có tồn tại không
     if(!accessToken) {
         //Nếu unfined thì trả về lỗi
-        return res.json(new ApiRespone(0, null, 100, "Lỗi xác thực!"));
+        return res.status(403).json(new ApiRespone(0, null, 100, "Lỗi xác thực!"));
     }
     //Lấy sign key của jwt
     const signingKey = process.env.JWT_SIGN_ACCESS_KEY;
@@ -14,10 +14,10 @@ export async function TokenValidator(req, res, next) {
         if(err)
         {
             if(err.name == "TokenExpiredError")
-                return res.json(ApiRespone.Err(101, "Expried"));
+                return res.status(403).json(ApiRespone.Err(101, "Expried"));
             
             //Nếu quá trình xác thực lỗi thì trả về lỗi
-            return res.json(ApiRespone.Err(100, "Lỗi xác thực!"));
+            return res.status(403).json(ApiRespone.Err(100, "Lỗi xác thực!"));
         }
         //nếu quá trình xác thực thành công thì tiếp tục đến middleware tiếp theo
         req.user = decode;
@@ -30,7 +30,7 @@ export async function TokenValidatorSkipExpired(req, res, next) {
     //Kiểm tra accesssToken có tồn tại không
     if(!accessToken) {
         //Nếu unfined thì trả về lỗi
-        return res.json(new ApiRespone(0, null, 100, "Lỗi xác thực!"));
+        return res.status(403).json(new ApiRespone(0, null, 100, "Lỗi xác thực!"));
     }
     //Lấy sign key của jwt
     const signingKey = process.env.JWT_SIGN_ACCESS_KEY;

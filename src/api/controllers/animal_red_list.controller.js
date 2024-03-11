@@ -2,6 +2,7 @@ import { ResultCode, Status } from "../interfaces/enum.interfaces.js";
 import { GetAnimalRedList, PredictAnimal, SearchAnimalRedList, UpdateAnimalRedList } from "../services/animal_red_list.models.js";
 import ApiRespone from "../interfaces/api.respone.interfaces.js";
 import { Animal_Red_List } from "../models/animal_red_list.models.js";
+import { AddAnimalRedList } from "../services/animal_red_list.models.js";
 
 export async function _AddAnimalRedList(req, res) {
     const VNName = req.body.VNName;
@@ -18,7 +19,7 @@ export async function _AddAnimalRedList(req, res) {
         res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
     }
     else {
-        const animalRedList = new Animal_Red_List(0, VNName, ENName, SCName, animalInfor, predictID, status, animalTypeId, conservationStatusID);
+        const animalRedList = new Object(0, VNName, ENName, SCName, animalInfor, predictID, status, animalTypeId, conservationStatusID);
         const result = await AddAnimalRedList(animalRedList, buffers);
         if(result.resultCode == ResultCode.Success) {
             res.json(ApiRespone.Success(1, result.data));
