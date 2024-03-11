@@ -6,10 +6,11 @@ import { History_Watch } from "../models/history_watch.js";
 import ImageModel from "../models/image.models.js";
 import { UploadImage } from "./cloudinary.services.js";
 import { ConverDateTimeToString } from "../helpers/string.helpers.js";
+import { Animal_Red_List_New } from "../models/animal_red_list_update_new.model.js";
 
 
-export async function AddAnimalRedList(animal = new Object(), buffers = []) {
-    const result = await Animal_Red_List.AddAnimalRedList(animal);
+export async function AddAnimalRedList(animal = new Animal_Red_List_New(), buffers = []) {
+    const result = await animal.AddAnimalRedList(animal);
     if(result.resultCode != ResultCode.Success) {
         return result;
     }
@@ -40,8 +41,8 @@ export async function AddAnimalRedList(animal = new Object(), buffers = []) {
     
     const imagesResult = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
 
-    const newAnimal = {...animal, images: imagesResult.data};
-    return new Result(ResultCode.Success, "Success", newAnimal);
+    animal.images = imagesResult.data;
+    return new Result(ResultCode.Success, "Success", animal);
 }
 
 export async function GetAnimalRedList(id = 0, status = Status.OK, user_id = 0) {
@@ -57,7 +58,7 @@ export async function GetAnimalRedList(id = 0, status = Status.OK, user_id = 0) 
     return result;
 }
 
-export async function UpdateAnimalRedList(animal = new Animal_Red_List(), buffers = null) {
+export async function UpdateAnimalRedList(animal = new Animal_Red_List_New(), buffers = null) {
     const result = await animal.UpdateAnimalRedList();
     if(result.resultCode != ResultCode.Success || buffers == null) {
         return result;
