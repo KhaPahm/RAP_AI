@@ -10,7 +10,7 @@ import ImageModel from "./image.models.js";
 import { Role } from "./role.models.js";
 
 export class UserInfor {
-	constructor(user_id = "", user_name = "", accessToken = "", role = null, email = "", day_of_birth = null, full_name = "", phone_number = "", avt = "", status = Status.OK) {
+	constructor(user_id = "", user_name = "", accessToken = "", role = null, email = "", day_of_birth = null, full_name = "", phone_number = "", avt = "", status = Status.OK, role_id = 0) {
 		this.userId = user_id;
 		this.userName = user_name;
 		this.accessToken = accessToken;
@@ -21,6 +21,7 @@ export class UserInfor {
 		this.phoneNumber = phone_number;
 		this.avt = avt;
 		this.status = status;
+		this.role_id = role_id;
 	}
 
 	set SetToken(accessToken) {
@@ -58,7 +59,7 @@ export class UserInfor {
 	}
 
 	static async Login(user_name = "", password = "") {
-		const strQuery = `ELECT u.*, ur.role_id FROM User u left join User_Role ur ON u.user_id = ur.user_id WHERE user_name = "${user_name}" AND status = "OK"`;
+		const strQuery = `SELECT u.*, ur.role_id FROM User u left join User_Role ur ON u.user_id = ur.user_id WHERE user_name = "${user_name}" AND status = "OK"`;
 		const result = await query(strQuery);
 		if(result.resultCode == ResultCode.Success && result.data.length == 1) {
 			//So sánh password
@@ -95,9 +96,12 @@ export class UserInfor {
 					result.data[0].day_of_birth, 
 					result.data[0].full_name, 
 					result.data[0].phone_number,
-					result.data[0].phone_number,
-					avt.data == null ? null : avt.data[0].image_public_path
+					avt.data == null ? null : avt.data[0].image_public_path,
+					result.data[0].status,
+					result.data[0].role_id,
 				));
+			} else {
+				return new Result(ResultCode.Warning, "Tài khoản hoặc mật khẩu không đúng!", null);
 			}
 		}
 		else if(result.resultCode == ResultCode.Success && result.data.length == 0) {

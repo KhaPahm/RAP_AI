@@ -73,7 +73,7 @@ export class Report {
                                                 LEFT JOIN User as u
                                                 ON urpt.user_id = u.user_id
                                                 WHERE rpt.status = "${status}"
-                                                order by urpt.user_report_id DESC LIMIT 1`;
+                                                order by urpt.user_report_id DESC`;
         }
         else if(report_id == 0 && (status != Status.OK && status != Status.WT && status != Status.XX)) {
             strQuery = `SELECT rpt.report_id, rpt.title, rpt.description, 
@@ -87,7 +87,7 @@ export class Report {
                                                 ON urpt.report_id = rpt.report_id
                                                 LEFT JOIN User as u
                                                 ON urpt.user_id = u.user_id
-                                                order by urpt.user_report_id DESC LIMIT 1`
+                                                order by urpt.user_report_id DESC`
                                 ;
         }
         else if(report_id != 0 && (status == Status.OK || status == Status.WT || status == Status.XX)) {
@@ -103,7 +103,7 @@ export class Report {
                                                 LEFT JOIN User as u
                                                 ON urpt.user_id = u.user_id
                                                 WHERE rpt.report_id = ${report_id} AND rpt.status = "${status}"
-                                                order by urpt.user_report_id DESC LIMIT 1`;
+                                                order by urpt.user_report_id DESC`;
                                 //WHERE rpt.report_id = ${report_id} AND rpt.status = "${status}"`;
         }
         else {
@@ -119,11 +119,24 @@ export class Report {
                                                 LEFT JOIN User as u
                                                 ON urpt.user_id = u.user_id
                                                 WHERE rpt.report_id = ${report_id}
-                                                order by urpt.user_report_id DESC LIMIT 1`; 
+                                                order by urpt.user_report_id DESC`; 
         }
 
         const result = await query(strQuery);
-        if(result.resultCode != ResultCode.Success) {
+        
+
+        if(result.resultCode == ResultCode.Success) {
+            const checked = [];
+            const newData = [];
+            if(result.data.length > 1) {
+                result.data.forEach(element => {
+                    if(checked.includes(element.report_id) == false) {
+                        checked.push(element.report_id);
+                        newData.push(element);
+                    }
+                });
+                result.data = newData;
+            }
             return result;
         }
 
