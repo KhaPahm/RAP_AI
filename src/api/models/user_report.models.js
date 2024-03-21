@@ -35,9 +35,9 @@ export class User_Report {
     }
 
     async AddRecordActionReport() {
-        const strQueryCheck = `SELECT * FROM User_Report WHERE report_id = ${this.report_id} AND action = "${this.action}";`;
+        const strQueryCheck = `SELECT * FROM User_Report WHERE report_id = ${this.report_id} AND action = "CREATE";`;
         const check = await query(strQueryCheck);
-        if(check.resultCode == ResultCode.Success && check.data.length > 0) {
+        if(check.resultCode == ResultCode.Success && check.data.length > 0 && this.action == "CREATE") {
             return new Result(ResultCode.Warning, "Acction was recorded, can't record again!", null);
         }
         else {
