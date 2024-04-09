@@ -16,6 +16,7 @@ export class Animal_Red_List {
         this.animal_type = animal_type;
         this.conservation_status = conservation_status;
         this.images = images;
+        this.predict_id = predict_id;
     }
 
     // async AddAnimalRedList() {
@@ -221,7 +222,7 @@ export class Animal_Red_List {
                 // images.data.forEach(image => {
                 //     lstImagePath.push(image.image_public_path)
                 // });
-                const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, result.data[0].animal_type, result.data[0].conservation_status, images.data);
+                const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, result.data[0].animal_type, result.data[0].conservation_status, images.data, predict_id);
                 return new Result(ResultCode.Success, "Success", [animalRedList, rate])
             }
             return new Result(ResultCode.Err, "Lỗi tải ảnh!", [null,null])
@@ -243,8 +244,8 @@ export class Animal_Red_List {
             .expandDims();
 
         const prediction = model.predict(tensor);
-        const rate = prediction.dataSync()[0];
         const result = prediction.as1D().argMax().dataSync()[0];
+        const rate = prediction.dataSync()[result];
         return await this.GetAnimalRedListByPredictId(result+1, rate*100);
     }
 }

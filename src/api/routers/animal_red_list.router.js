@@ -10,7 +10,7 @@ const router = Router();
 router.post("/searchAnimalReadList", upload.any(), _SearchAnimalRedList);
 router.post("/getAnimalRedList", upload.any(), _GetAnimalRedList);
 router.post("/getAnimalRedListAfterLogin", upload.any(), TokenValidator, _GetAnimalRedList);
-router.post("/predictAnimal", upload.single("image"), _PredictAnimal);
+router.post("/predictAnimal", upload.single("image"),_PredictAnimal);
 router.post("/predictAnimalAfterLogin", upload.single("image"), TokenValidator, _PredictAnimal);
 
 export default router;

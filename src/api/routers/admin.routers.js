@@ -28,4 +28,5 @@ router.post("/updateAnimalType", upload.any(), TokenValidator, CheckUrlRole, _Up
 router.post("/addAnimalRedList", upload.array("images"), TokenValidator, CheckUrlRole, _AddAnimalRedList);
 router.post("/updateAnimalRedList", upload.array("images"), TokenValidator, CheckUrlRole, _UpdateAnimalRedList);
 
+
 export default router;

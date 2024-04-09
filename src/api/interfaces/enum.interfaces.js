@@ -26,7 +26,7 @@ export const ImageType = Object.freeze({
     Avata: "AVT",
     Report: "RPT",
     Redict: "AIC",
-    System: "SYS"
+    System: "SYS",
 });
 
 export const ActionReport = Object.freeze({

@@ -89,7 +89,7 @@ export async function _UpdateAnimalRedList(req, res) {
 
 export async function _PredictAnimal(req, res) {
     const userId = req.user ? req.user.userId : 0;
-    if(!req.file) return res.json(new ApiRespone(100, "Dữ liệu không phù hợp"))
+    if(!req.file) return res.json(new ApiRespone.Err(100, "Dữ liệu không phù hợp!"))
     const buffer = req.file.buffer;
     const result = await PredictAnimal(buffer, userId);
     if(result.resultCode == ResultCode.Success) {

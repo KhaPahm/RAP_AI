@@ -18,6 +18,7 @@ router.post("/verifyOtp", upload.any(), _VerifyOtp);
 router.post("/updateProfile", upload.any(),TokenValidator, _UpdateUser);
 router.post("/updateAvt", upload.single("image"),TokenValidator, _UpdateAvt);
 // router.post("/addRedList", upload.any(),TokenValidator, CheckUrlRole);
-router.post("/test", upload.array("image"), test);
+// router.post("/test", upload.array("image"), test);
+router.post("/test", test);
 
 export default router;

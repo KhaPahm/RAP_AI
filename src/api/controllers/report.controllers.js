@@ -34,7 +34,7 @@ export async function _GetReport(req, res) {
     let status = req.body.status || null;
     const result = await GetReportByReportID(rptId, status);
     if(result.resultCode == ResultCode.Success) {
-        res.json(ApiRespone.Success(1, result.data));
+        res.json(ApiRespone.Success(result.data.length, result.data));
     }
     else {
         res.json(ApiRespone.Err(100, result.message));

@@ -102,6 +102,23 @@ export async function PredictAnimal(buffer, user_id = 0) {
             await history.AddNewHistory();
         }
     }
+
+    if(result.data[0].predict_id != 31) {
+        const promiseUpload = UploadImage(`${FolderInCloudinary.ModelsImages}/${result.data[0].predict_id}`, buffer);
+        promiseUpload
+        .then(async (value) => {
+            var path = value.url;
+            const newImage = new ImageModel(0, path, path, `PredictRate: ${result.data[1]}`, ImageType.Redict, Status.OK, result.data[0].animal_red_list_id);
+            const resultAddImage = await newImage.AddNewImage();
+            if(resultAddImage.resultCode != ResultCode.Success) {
+                WriteErrLog(err);
+            }
+        })
+        .catch((err) => {
+            WriteErrLog(err);
+        });
+    }
+    
     return new Result(result.resultCode, result.message, result.data[0]);
 }
 

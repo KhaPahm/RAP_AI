@@ -4,11 +4,26 @@ import { config } from "dotenv";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import router from "./api/routers/index.routers.js";
-
+import chokidar from "chokidar";
+import { SendingMailAttachment } from "./api/services/mail.services.js";
+import path from "path";
 //Config enviroment variable
 config();
 
 // eslint-disable-next-line no-undef
+
+//<<<------Watcher----->>>
+var watcher = chokidar.watch("./src/backup", {ignored: /^\./, persistent: true});
+watcher
+  .on('add', function(localPath) {
+	var flieName = path.parse(localPath);
+	console.log(flieName.base);
+	var filePath = path.join(flieName.dir, flieName.base)
+	//SendingMailAttachment("test.sql", filePath)
+  })
+  .on('error', function(error) {console.error('Error happened', error);})
+
+//------------------
 const port = process.env.PORT;
 const app = express();
 
