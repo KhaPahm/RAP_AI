@@ -73,7 +73,7 @@ export async function SendingMailAttachment(fileName = "",localPath = "") {
     
         const mailOptions = {
             to: "khapham.work@gmail.com",
-            subject: "BACKUP NOTIFICATION",
+            subject: "[RAP'S SYSTEM] BACKUP DAILY NOTIFICATION",
             html: "Here you are:",
             attachments: [
                 {

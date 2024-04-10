@@ -13,13 +13,12 @@ config();
 // eslint-disable-next-line no-undef
 
 //<<<------Watcher----->>>
-var watcher = chokidar.watch("./src/backup", {ignored: /^\./, persistent: true});
+var watcher = chokidar.watch("./src/backup/daily/RAP_AI", {ignored: /^\./, persistent: true});
 watcher
   .on('add', function(localPath) {
 	var flieName = path.parse(localPath);
-	console.log(flieName.base);
 	var filePath = path.join(flieName.dir, flieName.base)
-	//SendingMailAttachment("test.sql", filePath)
+	SendingMailAttachment(flieName.base, filePath)
   })
   .on('error', function(error) {console.error('Error happened', error);})
 
