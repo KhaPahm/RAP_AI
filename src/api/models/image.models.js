@@ -34,7 +34,7 @@ export default class ImageModel {
         const strQuery = `INSERT INTO Image(image_local_path, image_public_path, image_type, description, status, animal_red_list_id, user_id, report_id) 
                         VALUES ("${this.image_local_path}", "${this.image_public_path}", "${this.image_type}", "${this.description}", "${this.status}", ${this.animal_red_list_id}, ${this.user_id}, ${this.report_id})`;
         
-        console.log(strQuery);
+        // console.log(strQuery);
         const result = await query(strQuery);
         if(result.resultCode == ResultCode.Success)
         {

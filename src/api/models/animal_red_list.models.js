@@ -87,6 +87,7 @@ export class Animal_Red_List {
                                 arl.sc_name,
                                 arl.animal_infor,
                                 arl.status,
+                                arl.predict_id,
                                 cs.stand_name as conservation_status ,
                                 aty.type_name as animal_type
                         from Animal_Red_List arl 
@@ -94,7 +95,7 @@ export class Animal_Red_List {
                         on arl.conservation_status_id = cs.conservation_status_id
                         left join Animal_Types aty 
                         on arl.animal_type_id = aty.animal_type_id
-                        where arl.status = "${status}"`;
+                        where arl.status = "${status}" ORDER BY arl.predict_id ASC`;
         } 
         else {
             strQuery = `select arl.animal_red_list_id, 
@@ -103,6 +104,7 @@ export class Animal_Red_List {
                                 arl.sc_name,
                                 arl.animal_infor,
                                 arl.status,
+                                arl.predict_id,
                                 cs.stand_name as conservation_status ,
                                 aty.type_name as animal_type
                         from Animal_Red_List arl 
@@ -110,7 +112,7 @@ export class Animal_Red_List {
                         on arl.conservation_status_id = cs.conservation_status_id
                         left join Animal_Types aty 
                         on arl.animal_type_id = aty.animal_type_id
-                        where arl.animal_red_list_id = ${id} and arl.status = "${status}"`;
+                        where arl.animal_red_list_id = ${id} and arl.status = "${status}" ORDER BY arl.predict_id ASC`;
         }
         const result = await query(strQuery);
         if(result.resultCode == ResultCode.Success && id != 0 && result.data.length > 0) {
@@ -120,7 +122,7 @@ export class Animal_Red_List {
                 // images.data.forEach(image => {
                 //     lstImagePath.push(image.image_public_path)
                 // });
-                const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, result.data[0].animal_type, result.data[0].conservation_status, images.data);
+                const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, result.data[0].animal_type, result.data[0].conservation_status, images.data, result.data[0].predict_id);
                 return new Result(ResultCode.Success, "Success", animalRedList)
             }
             return images;
@@ -138,6 +140,8 @@ export class Animal_Red_List {
                     animal.status,
                     animal.animal_type,
                     animal.conservation_status,
+                    null,
+                    animal.predict_id
                     )
                 const images = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
                 if(images.resultCode == ResultCode.Success) {
