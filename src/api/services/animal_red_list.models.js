@@ -103,7 +103,7 @@ export async function PredictAnimal(buffer, user_id = 0) {
         }
     }
 
-    if(result.data[0].predict_id != 31) {
+    if(result.resultCode == ResultCode.Success) {
         const promiseUpload = UploadImage(`${FolderInCloudinary.ModelsImages}/${result.data[0].predict_id}`, buffer);
         promiseUpload
         .then(async (value) => {
