@@ -3,7 +3,7 @@ import { ImageType, ResultCode, Status } from "../interfaces/enum.interfaces.js"
 import { query } from "./index.models.js"; 
 
 export default class ImageModel {
-    constructor(image_id = 0, image_local_path ="", image_public_path = "", description = "", image_type  = "", status = Status.OK, animal_red_list_id = null, user_id = null, report_id = null) {
+    constructor(image_id = 0, image_local_path ="", image_public_path = "", description = "", image_type  = "", status = Status.OK, animal_red_list_id = null, user_id = null, report_id = null, contribute_id = null) {
         this.image_id = image_id;
         this.image_local_path = image_local_path;
         this.image_public_path = image_public_path;
@@ -13,6 +13,7 @@ export default class ImageModel {
         this.animal_red_list_id = animal_red_list_id;
         this.user_id = user_id;
         this.report_id = report_id;
+        this.contribute_id = contribute_id;
     }
 
     //AVT - ảnh đại diện
@@ -31,8 +32,8 @@ export default class ImageModel {
     }
 
     async AddNewImage() {
-        const strQuery = `INSERT INTO Image(image_local_path, image_public_path, image_type, description, status, animal_red_list_id, user_id, report_id) 
-                        VALUES ("${this.image_local_path}", "${this.image_public_path}", "${this.image_type}", "${this.description}", "${this.status}", ${this.animal_red_list_id}, ${this.user_id}, ${this.report_id})`;
+        const strQuery = `INSERT INTO Image(image_local_path, image_public_path, image_type, description, status, animal_red_list_id, user_id, report_id, contribute_id) 
+                        VALUES ("${this.image_local_path}", "${this.image_public_path}", "${this.image_type}", "${this.description}", "${this.status}", ${this.animal_red_list_id}, ${this.user_id}, ${this.report_id}, ${this.contribute_id})`;
         
         // console.log(strQuery);
         const result = await query(strQuery);
@@ -71,6 +72,11 @@ export default class ImageModel {
 
     static async DeleteImageByReportId(report_id = 0) {
         const result = await query(`DELETE FROM Image where report_id = ${report_id};`);
+        return result;
+    }
+
+    static async DeleteImageByContributeId(contribute_id = 0) {
+        const result = await query(`DELETE FROM Image where contribute_id = ${contribute_id};`);
         return result;
     }
 

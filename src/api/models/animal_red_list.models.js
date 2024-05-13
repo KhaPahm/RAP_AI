@@ -6,7 +6,7 @@ import ImageModel from "./image.models.js";
 import tf from "@tensorflow/tfjs-node"
 
 export class Animal_Red_List {
-    constructor(animal_red_list_id = 0, vn_name = "", en_name = "", sc_name = "", animal_infor = "", status = Status.OK, animal_type = "", conservation_status = "", images = [], predict_id, animal_type_id, conservation_status_id) {
+    constructor(animal_red_list_id = 0, vn_name = "", en_name = "", sc_name = "", animal_infor = "", status = Status.OK, animal_type = "", conservation_status = "", images = [], predict_id = 0, animal_type_id = 0, conservation_status_id = 0) {
         this.animal_red_list_id = animal_red_list_id;
         this.vn_name = vn_name;
         this.en_name = en_name;
@@ -17,6 +17,8 @@ export class Animal_Red_List {
         this.conservation_status = conservation_status;
         this.images = images;
         this.predict_id = predict_id;
+        this.animal_type_id = animal_type_id;
+        this.conservation_status_id = conservation_status_id;
     }
 
     // async AddAnimalRedList() {
@@ -89,7 +91,9 @@ export class Animal_Red_List {
                                 arl.status,
                                 arl.predict_id,
                                 cs.stand_name as conservation_status ,
-                                aty.type_name as animal_type
+                                aty.type_name as animal_type,
+                                aty.animal_type_id,
+                                cs.conservation_status_id
                         from Animal_Red_List arl 
                         left join Conservation_Status cs 
                         on arl.conservation_status_id = cs.conservation_status_id
@@ -106,7 +110,9 @@ export class Animal_Red_List {
                                 arl.status,
                                 arl.predict_id,
                                 cs.stand_name as conservation_status ,
-                                aty.type_name as animal_type
+                                aty.type_name as animal_type,
+                                aty.animal_type_id,
+                                cs.conservation_status_id
                         from Animal_Red_List arl 
                         left join Conservation_Status cs 
                         on arl.conservation_status_id = cs.conservation_status_id
@@ -122,7 +128,10 @@ export class Animal_Red_List {
                 // images.data.forEach(image => {
                 //     lstImagePath.push(image.image_public_path)
                 // });
-                const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, result.data[0].animal_type, result.data[0].conservation_status, images.data, result.data[0].predict_id);
+                const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, 
+                    result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, 
+                    result.data[0].animal_type, result.data[0].conservation_status, images.data, result.data[0].predict_id,
+                    result.data[0].animal_type_id, result.data[0].conservation_status_id );
                 return new Result(ResultCode.Success, "Success", animalRedList)
             }
             return images;
@@ -141,7 +150,9 @@ export class Animal_Red_List {
                     animal.animal_type,
                     animal.conservation_status,
                     null,
-                    animal.predict_id
+                    animal.predict_id,
+                    animal.animal_type_id, 
+                    animal.conservation_status_id 
                     )
                 const images = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
                 if(images.resultCode == ResultCode.Success) {
@@ -187,6 +198,10 @@ export class Animal_Red_List {
                     animal.status,
                     animal.animal_type,
                     animal.conservation_status,
+                    null,
+                    animal.predict_id,
+                    animal.animal_type_id, 
+                    animal.conservation_status_id 
                     )
                 const images = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
                 if(images.resultCode == ResultCode.Success) {
@@ -226,7 +241,10 @@ export class Animal_Red_List {
                 // images.data.forEach(image => {
                 //     lstImagePath.push(image.image_public_path)
                 // });
-                const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, result.data[0].animal_type, result.data[0].conservation_status, images.data, predict_id);
+                const animalRedList = new Animal_Red_List(result.data[0].animal_red_list_id, result.data[0].vn_name, 
+                    result.data[0].en_name, result.data[0].sc_name, result.data[0].animal_infor, result.data[0].status, 
+                    result.data[0].animal_type, result.data[0].conservation_status, images.data, predict_id,
+                    result.data[0].animal_type_id, result.data[0].conservation_status_id );
                 return new Result(ResultCode.Success, "Success", [animalRedList, rate])
             }
             return new Result(ResultCode.Err, "Lỗi tải ảnh!", [null,null])
