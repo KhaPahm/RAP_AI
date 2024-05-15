@@ -24,7 +24,7 @@ router.use("/history", history);
 router.use("/contribute", contribute);
 
 router.use("/", (req, res) => {
-	res.send("This is API for RAP.");
+	res.redirect("http://rap-ai.asia/");
 });
 
 export default router;
