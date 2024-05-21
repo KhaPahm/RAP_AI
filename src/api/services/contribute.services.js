@@ -58,6 +58,6 @@ export async function AddContribute(newContribute = new Contribute(), buffers, u
 
 }
 
-export async function GetContributeById(contribute_id = 0) {
-    return await Contribute.GetContributeById(contribute_id);
+export async function GetContributeById(contribute_id = 0, user_id = 0) {
+    return await Contribute.GetContributeById(contribute_id, user_id);
 }

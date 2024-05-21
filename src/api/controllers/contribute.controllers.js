@@ -28,16 +28,21 @@ export async function _AddNewContribute(req, res) {
 
 export async function _GetContributeById(req, res) {
     const contributeId = req.body.contributeId || 0;
-    if(contributeId == 0) {
-        res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
+    const userId  = req.user.userId;
+    const role = req.user.role;
+
+    var result;
+    if(role != 3) {
+        result = await GetContributeById(contributeId);
     }
     else {
-        const result = await GetContributeById(contributeId);
-        if(result.resultCode == ResultCode.Success) {
-            res.json(ApiRespone.Success(1, result.data));
-        }
-        else {
-            res.json(ApiRespone.Err(100, result.message));
-        }
+        result = await GetContributeById(contributeId, userId);
+    }
+    
+    if(result.resultCode == ResultCode.Success) {
+        res.json(ApiRespone.Success(1, result.data));
+    }
+    else {
+        res.json(ApiRespone.Err(100, result.message));
     }
 }
