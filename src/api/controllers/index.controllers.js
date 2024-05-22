@@ -7,9 +7,8 @@ import { SendingMail, SendingMailAttachment } from "../services/mail.services.js
 
 export async function test(req, res, next) {
 
-    var t = await SendingMailAttachment();
-    
-    console.log(t);
+    const urlPath = req.body.urlPath;
+
     // let result = await UploadImage(FolderInCloudinary.ModelsImages, req.file.buffer);
     // console.log(result);
     // const buffers = req.files;

@@ -65,7 +65,7 @@ export class Contribute {
                                 left join Contribute c on uc.contribute_id = c.contribute_id
                                 left join User u on u.user_id = uc.user_id
                                 left join Image i on uc.contribute_id = i.contribute_id
-                                where uc.contribute_id = ${contribute_id} and i.contribute_id <> 0
+                                where uc.contribute_id = ${contribute_id} and i.contribute_id <> 0 and c.status <> "XX"
                                 order by uc.contribute_id;`;
         }
         else if(contribute_id == 0 && user_id == 0) 
@@ -87,7 +87,7 @@ export class Contribute {
                                 left join Contribute c on uc.contribute_id = c.contribute_id
                                 left join User u on u.user_id = uc.user_id
                                 left join Image i on uc.contribute_id = i.contribute_id
-                                where i.contribute_id <> 0 order by uc.contribute_id;`;
+                                where i.contribute_id <> 0 order by uc.contribute_id and c.status <> "XX";`;
         }
         else if(contribute_id == 0 && user_id != 0) 
         {
@@ -108,7 +108,7 @@ export class Contribute {
                                 left join Contribute c on uc.contribute_id = c.contribute_id
                                 left join User u on u.user_id = uc.user_id
                                 left join Image i on uc.contribute_id = i.contribute_id
-                                where uc.user_id = ${user_id} and i.contribute_id <> 0
+                                where uc.user_id = ${user_id} and i.contribute_id <> 0 and c.status <> "XX"
                                 order by uc.contribute_id;`;
         }
         
@@ -118,8 +118,6 @@ export class Contribute {
 
         if(result.resultCode == ResultCode.Success && result.data.length > 0)
         {
-            //return this.HandleResultSuccess(result.data)
-            
             const datas = result.data;
             const checked = [];
             const resultData = [];
@@ -165,36 +163,18 @@ export class Contribute {
         return new Result(ResultCode.Err, "Erro when get contribute!", null);
     }
 
-    static async HandleResultSuccess(datas) {
-        const fline = datas[0];
-        const userInfor = {
-            user_id: fline.user_id,
-            email: fline.email,
-            full_name: fline.full_name,
-            phone_number: fline.phone_number,
+    static async UpdateContributeStatusById(contribute_id = 0, status = Status.OK) {
+        const strQuery = `UPDATE Contribute SET status = "${status}", 
+                                            WHERE contribute_id = ${contribute_id}`;
+                                            
+        const result = await query(strQuery);
+
+        if(result.resultCode == ResultCode.Success)
+        {
+            this.role_id = result.data.insertId;
+            return new Result(ResultCode.Success, "Success!", this);
         }
 
-        const contribute = {
-            contribute_id: fline.contribute_id,
-            animal_name: fline.animal_name,
-            description: fline.description,
-            datetime: fline.datetime,
-            status: fline.status,
-            images: []
-        }
-
-        var images = [];
-        datas.forEach(data => {
-            var image = {
-                image_id: data.image_id,
-                image_type: data.image_type,
-                image_local_path: data.image_local_path,
-                image_public_path: data.image_public_path,
-            }
-            images.push(image);
-        });
-
-        contribute.images = images;
-        return new Result(ResultCode.Success, "Success", {userInfor, contribute});
+        return new Result(ResultCode.Err, "Erro when update menu!", null);
     }
 }

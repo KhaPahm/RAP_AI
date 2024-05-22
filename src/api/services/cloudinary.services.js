@@ -57,3 +57,30 @@ export async function DeleteImage(folderPath, fileName) {
     });
   })
 }
+
+export async function UpdateImageUsingURL(url, archiveFolderPath) {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(url, 
+      { folder: archiveFolderPath },
+        (error, result) => {
+          if (result) {
+            resolve(result);
+          } else {
+            reject(error);
+          }
+        }
+    )
+  });
+}
+
+export async function CreateNewFolder(parentPath, newFolderName) {
+  return new Promise((resolve, reject) => {
+    cloudinary.api.create_folder(`${parentPath}/${newFolderName}`)
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((err) => {
+        reject(err);
+      })
+  });
+}
