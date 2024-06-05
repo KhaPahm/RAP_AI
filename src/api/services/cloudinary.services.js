@@ -5,6 +5,7 @@ import { CloudinaryConfig } from "../../config/cloudinary.config.js";
 import ImageModel from "../models/image.models.js";
 import { ConverDateTimeToString } from "../helpers/string.helpers.js";
 import { UserInfor } from "../models/user.models.js";
+import { WriteErrLog } from "../helpers/index.helpers.js";
 cloudinary.config(CloudinaryConfig);
 
 export async function UploadImage(folderPath = FolderInCloudinary.ModelsImages, buffer) {
@@ -47,14 +48,45 @@ export async function UpdateAvt(folderPath, buffer, userId) {
 export async function DeleteImage(folderPath, fileName) {
   var path = folderPath + "/" + fileName;
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.destroy( 
-      fileName, (error, result) => {
-      if (result) {
-        resolve(result);
-      } else {
-        reject(error);
+    // cloudinary.uploader.destroy( 
+    //   fileName, (error, result) => {
+    //   if (result) {
+    //     console.log(result);
+    //     resolve(result);
+    //   } else {
+    //     WriteErrLog(error);
+    //     reject(error);
+    //   }
+    // });
+    cloudinary.api.delete_resources(
+      [path], 
+      {type: 'upload', resource_type: 'image'}, 
+      (error, result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          WriteErrLog(error);
+          reject(error);
+        }
       }
-    });
+    )
+  })
+}
+
+export async function DeleteImageUsingSourcePath(sourcePath) {
+  return new Promise((resolve, reject) => {
+    cloudinary.api.delete_resources(
+      [sourcePath], 
+      {type: 'upload', resource_type: 'image'}, 
+      (error, result) => {
+        if (result) {
+          resolve(result);
+        } else {
+          WriteErrLog(error);
+          reject(error);
+        }
+      }
+    )
   })
 }
 
@@ -66,6 +98,7 @@ export async function UpdateImageUsingURL(url, archiveFolderPath) {
           if (result) {
             resolve(result);
           } else {
+            WriteErrLog(error);
             reject(error);
           }
         }

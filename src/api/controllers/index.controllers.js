@@ -1,29 +1,23 @@
-import { buffer } from "@tensorflow/tfjs-node";
+import { buffer, imag } from "@tensorflow/tfjs-node";
 import { WriteErrLog } from "../helpers/index.helpers.js";
 import { FolderInCloudinary } from "../interfaces/enum.interfaces.js";
-import { UploadImage } from "../services/cloudinary.services.js";
+import { UploadImage, UpdateImageUsingURL, DeleteImage, DeleteImageUsingSourcePath } from "../services/cloudinary.services.js";
 import { predict } from "../test/test.redict.js";
 import { SendingMail, SendingMailAttachment } from "../services/mail.services.js";
+import path from "path";
 
 export async function test(req, res, next) {
 
     const urlPath = req.body.urlPath;
+    const archivePath = "RAP/Test/From";
+    const sourceUrl = "RAP" + urlPath.split("RAP")[1].split(".")[0];
+    // var imageId = path.basename(urlPath).split(".")[0];
 
-    // let result = await UploadImage(FolderInCloudinary.ModelsImages, req.file.buffer);
-    // console.log(result);
-    // const buffers = req.files;
-    // console.log(buffers);
-    // var isErro = false;
-    // buffers.forEach(buffer => {
-    //     const promiseUpload = UploadImage(FolderInCloudinary.RedListImages,  buffer.buffer);
-    //     promiseUpload
-    //         .then((value) => {
-    //             console.log(value);
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //             isErro = true;
-    //             WriteErrLog(err);
-    //         });
-    // });
+    UpdateImageUsingURL(urlPath, archivePath)
+    .then((result) => {
+        console.log(result.secure_url);
+        DeleteImageUsingSourcePath(sourceUrl);
+    })
+
+    return;
 }
