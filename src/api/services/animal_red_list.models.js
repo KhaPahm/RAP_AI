@@ -16,7 +16,7 @@ export async function AddAnimalRedList(animal = new Animal_Red_List_New(), buffe
     }
 
     //Tạo folder moi trong cloudinary
-    CreateNewFolder(FolderInCloudinary.ModelsImages, animal.predict_id).catch((err) => WriteErrLog(err));
+    CreateNewFolder(FolderInCloudinary.ModelsImages, result.data.animal_red_list_id).catch((err) => WriteErrLog(err));
 
     const idNewAnimalInRedList = result.data.animal_red_list_id;
 
@@ -63,8 +63,7 @@ export async function GetAnimalRedList(id = 0, status = Status.OK, user_id = 0) 
 
 export async function UpdateAnimalRedList(animal = new Animal_Red_List_New(), buffers = null) {
     const result = await animal.UpdateAnimalRedList();
-
-    CreateNewFolder(FolderInCloudinary.ModelsImages, animal.predict_id).catch((err) => WriteErrLog(err));
+    // CreateNewFolder(FolderInCloudinary.ModelsImages, animal.animal_red_list_id).catch((err) => WriteErrLog(err));
 
     if(result.resultCode != ResultCode.Success || buffers == null) {
         return result;
@@ -111,7 +110,7 @@ export async function PredictAnimal(buffer, user_id = 0) {
     }
 
     if(result.resultCode == ResultCode.Success) {
-        const promiseUpload = UploadImage(`${FolderInCloudinary.ModelsImages}/${result.data[0].predict_id}`, buffer);
+        const promiseUpload = UploadImage(`${FolderInCloudinary.ModelsImages}/${result.data[0].animal_red_list_id}`, buffer);
         promiseUpload
         .then(async (value) => {
             var path = value.url;

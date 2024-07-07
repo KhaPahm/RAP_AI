@@ -50,18 +50,22 @@ export async function _GetContributeById(req, res) {
 export async function _UpdateContribute(req, res) {
     const contributeId = req.body.contributeId || 0;
     const status = req.body.status || "";
-    const predict_id = req.body.status || 0;
+    const animalRedListID = req.body.animalRedListID || 0; //Dùng để lưu vào folder
+    const lsImageAccept = req.body.lsImageAccept || "";
     const role = req.user.role;
 
-    if(contributeId == 0 || status == "" || predict_id == 0) {
-        res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
+    if(animalRedListID == 0){
+        res.json(ApiRespone.Err(100, "Không được để trống animalRedListID!"));
+    }
+    else if(contributeId == 0 || status == "" ) {
+        res.json(ApiRespone.Err(100, "Không được để trống contributeId!"));
     }
     else {
         if(role == 3 && status == "OK") {
             res.json(ApiRespone.Err(100, "Bạn không có quyền xác thực đóng góp!"));
         }
         else{
-            result = await UpdateContributeById(contributeId, status);
+            var result = await UpdateContributeById(contributeId, status, animalRedListID, lsImageAccept);
             if(result.resultCode == ResultCode.Success) {
                 res.json(ApiRespone.Success(1, result.data));
             }

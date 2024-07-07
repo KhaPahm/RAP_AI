@@ -58,6 +58,7 @@ export class Contribute {
                                 c.datetime,
                                 c.status,
                                 i.image_id,
+                                i.status as image_status,
                                 i.image_type,
                                 i.image_local_path,
                                 i.image_public_path
@@ -65,7 +66,7 @@ export class Contribute {
                                 left join Contribute c on uc.contribute_id = c.contribute_id
                                 left join User u on u.user_id = uc.user_id
                                 left join Image i on uc.contribute_id = i.contribute_id
-                                where uc.contribute_id = ${contribute_id} and i.contribute_id <> 0 and c.status <> "XX"
+                                where uc.contribute_id = ${contribute_id} and i.contribute_id <> 0 
                                 order by uc.contribute_id;`;
         }
         else if(contribute_id == 0 && user_id == 0) 
@@ -80,6 +81,7 @@ export class Contribute {
                                 c.datetime,
                                 c.status,
                                 i.image_id,
+                                i.status as image_status,
                                 i.image_type,
                                 i.image_local_path,
                                 i.image_public_path
@@ -101,6 +103,7 @@ export class Contribute {
                                 c.datetime,
                                 c.status,
                                 i.image_id,
+                                i.status as image_status,
                                 i.image_type,
                                 i.image_local_path,
                                 i.image_public_path
@@ -115,7 +118,6 @@ export class Contribute {
 
         const result = await query(strQuery);
 
-
         if(result.resultCode == ResultCode.Success && result.data.length > 0)
         {
             const datas = result.data;
@@ -126,6 +128,7 @@ export class Contribute {
                     checked.push(data.contribute_id)
                     var image = {
                         image_id: data.image_id,
+                        status: data.image_status,
                         image_type: data.image_type,
                         image_local_path: data.image_local_path,
                         image_public_path: data.image_public_path               
@@ -148,6 +151,7 @@ export class Contribute {
                     var p = resultData.pop();
                     var image = {
                         image_id: data.image_id,
+                        status: data.image_status,
                         image_type: data.image_type,
                         image_local_path: data.image_local_path,
                         image_public_path: data.image_public_path               
@@ -159,12 +163,11 @@ export class Contribute {
 
             return new Result(ResultCode.Success, "Success", resultData);
         }
-
         return new Result(ResultCode.Err, "Erro when get contribute!", null);
     }
 
     static async UpdateContributeStatusById(contribute_id = 0, status = Status.OK) {
-        const strQuery = `UPDATE Contribute SET status = "${status}", 
+        const strQuery = `UPDATE Contribute SET status = "${status}" 
                                             WHERE contribute_id = ${contribute_id}`;
                                             
         const result = await query(strQuery);

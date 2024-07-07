@@ -23,6 +23,8 @@ export const FolderInCloudinary = Object.freeze({
 //RPT - ảnh report
 //AIC - ảnh dự đoán
 //SYS - ảnh hệ thống
+//CON - Ảnh góp ý
+//
 export const ImageType = Object.freeze({
     Avata: "AVT",
     Report: "RPT",

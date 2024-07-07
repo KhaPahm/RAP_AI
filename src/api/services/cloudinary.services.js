@@ -113,6 +113,22 @@ export async function CreateNewFolder(parentPath, newFolderName) {
         resolve(result);
       })
       .catch((err) => {
+        WriteErrLog(err);
+        reject(err);
+      })
+  });
+}
+
+export async function MoveImage(currentPath, archiveFolder) {
+  const sourceUrl = "RAP" + currentPath.split("RAP")[1].split(".")[0];
+  return new Promise((resolve, reject) => {
+    UpdateImageUsingURL(currentPath, archiveFolder)
+      .then((result) => {
+        DeleteImageUsingSourcePath(sourceUrl);
+        resolve(result);
+      })
+      .catch((err) => {
+        WriteErrLog(err);
         reject(err);
       })
   });

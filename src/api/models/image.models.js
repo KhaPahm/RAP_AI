@@ -70,6 +70,11 @@ export default class ImageModel {
         return result;
     }
 
+    static async GetAvtByUserId(userId = 0) {
+        const result = await query(`SELECT image_public_path FROM Image WHERE user_id = ${userId} ORDER BY image_id LIMIT 1;`);
+        return result;
+    }
+
     static async DeleteImageByReportId(report_id = 0) {
         const result = await query(`DELETE FROM Image where report_id = ${report_id};`);
         return result;
@@ -80,8 +85,23 @@ export default class ImageModel {
         return result;
     }
 
-    static async GetAvtByUserId(userId = 0) {
-        const result = await query(`SELECT image_public_path FROM Image WHERE user_id = ${userId} ORDER BY image_id LIMIT 1;`);
+    static async UpdateContributeImage(imageId, newPublicPath, newLocalPath, newStatus) {
+        const strQuery = `UPDATE Image SET image_public_path = "${newPublicPath}"
+                                        , image_local_path = "${newLocalPath}" 
+                                        , status = "${newStatus}" 
+                            WHERE image_id = ${imageId}`;
+        const result = await query(strQuery);
+
+        if(result.resultCode == ResultCode.Success)
+        {
+            return new Result(ResultCode.Success, "Cập nhật ảnh thành công!");
+        }
+
+        return new Result(ResultCode.Err, "Erro when add new role!", null);
+    }
+
+    static async GetImageByContributeId(contribute_id) {
+        const result = await query(`SELECT image_id, image_local_path, image_public_path, image_type, status FROM Image WHERE contribute_id = ${contribute_id}`);
         return result;
     }
 }

@@ -66,7 +66,7 @@ export class Animal_Red_List_New {
 
         if(result.resultCode == ResultCode.Success)
         {
-            this.role_id = result.data.insertId;
+            this.animal_red_list_id = result.data.insertId;
             return new Result(ResultCode.Success, "Cập nhật động vật thành công!", this);
         }
         if(result.resultCode == ResultCode.Warning && result.data.code == "ER_DUP_ENTRY") {
