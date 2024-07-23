@@ -90,6 +90,7 @@ export default class ImageModel {
                                         , image_local_path = "${newLocalPath}" 
                                         , status = "${newStatus}" 
                             WHERE image_id = ${imageId}`;
+
         const result = await query(strQuery);
 
         if(result.resultCode == ResultCode.Success)

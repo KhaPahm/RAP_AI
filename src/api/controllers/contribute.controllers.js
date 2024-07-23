@@ -54,7 +54,7 @@ export async function _UpdateContribute(req, res) {
     const lsImageAccept = req.body.lsImageAccept || "";
     const role = req.user.role;
 
-    if(animalRedListID == 0){
+    if(status == "OK" && animalRedListID == 0 && lsImageAccept != ""){
         res.json(ApiRespone.Err(100, "Không được để trống animalRedListID!"));
     }
     else if(contributeId == 0 || status == "" ) {

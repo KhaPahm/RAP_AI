@@ -4,6 +4,7 @@ import ApiRespone from "../interfaces/api.respone.interfaces.js";
 import { Animal_Red_List } from "../models/animal_red_list.models.js";
 import { AddAnimalRedList } from "../services/animal_red_list.models.js";
 import { Animal_Red_List_New } from "../models/animal_red_list_update_new.model.js";
+import { WriteErrLog } from "../helpers/index.helpers.js";
 
 export async function _AddAnimalRedList(req, res) {
     const VNName = req.body.VNName;

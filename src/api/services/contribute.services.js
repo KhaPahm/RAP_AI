@@ -74,12 +74,13 @@ export async function UpdateContributeById(contribute_id = 0, status = Status.OK
     if(status == Status.XX) {
         lsImageAccept = "";
     }
-
     const lsImage = await ImageModel.GetImageByContributeId(contribute_id);
     if(lsImage.resultCode == ResultCode.Success) {
         var listImageAccept = lsImageAccept.split("-");
         var lsImageAcceptFail = "";
         var lsImageRejectFail = "";
+
+
 
         lsImage.data.forEach(async (image) => {
             if(listImageAccept.includes(image.image_id.toString())) {
@@ -102,6 +103,9 @@ export async function UpdateContributeById(contribute_id = 0, status = Status.OK
                     .catch(() => {
                         lsImageRejectFail = image.image_id.toString() + "-";
                     })
+                }
+                else if(image.status != "WT") {
+                    await ImageModel.UpdateContributeImage(image.image_id, image.image_public_path, image.image_local_path, "WT");
                 }
             }
         });
