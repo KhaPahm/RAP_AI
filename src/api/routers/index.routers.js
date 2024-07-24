@@ -6,6 +6,8 @@ import redlist from "./animal_red_list.router.js";
 import image from "./image.routers.js";
 import report from "./report.routers.js";
 import history from "./history.router.js";
+import contribute from "./contribute.routers.js"
+
 
 router.use("/user", userRouter);
 
@@ -19,8 +21,10 @@ router.use("/report", report);
 
 router.use("/history", history);
 
+router.use("/contribute", contribute);
+
 router.use("/", (req, res) => {
-	res.send("This is API for RAP.");
+	res.redirect("http://rap-ai.asia/");
 });
 
 export default router;

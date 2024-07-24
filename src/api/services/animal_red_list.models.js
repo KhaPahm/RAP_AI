@@ -4,7 +4,7 @@ import { AnimalSearchTypes, FolderInCloudinary, ImageType, ResultCode, Status } 
 import { Animal_Red_List } from "../models/animal_red_list.models.js";
 import { History_Watch } from "../models/history_watch.js";
 import ImageModel from "../models/image.models.js";
-import { UploadImage } from "./cloudinary.services.js";
+import { UploadImage, CreateNewFolder } from "./cloudinary.services.js";
 import { ConverDateTimeToString } from "../helpers/string.helpers.js";
 import { Animal_Red_List_New } from "../models/animal_red_list_update_new.model.js";
 
@@ -14,8 +14,11 @@ export async function AddAnimalRedList(animal = new Animal_Red_List_New(), buffe
     if(result.resultCode != ResultCode.Success) {
         return result;
     }
-    const idNewAnimalInRedList = result.data.animal_red_list_id;
 
+    //Tạo folder moi trong cloudinary
+    CreateNewFolder(FolderInCloudinary.ModelsImages, result.data.animal_red_list_id).catch((err) => WriteErrLog(err));
+
+    const idNewAnimalInRedList = result.data.animal_red_list_id;
 
     var isErro = false;
 
@@ -60,9 +63,12 @@ export async function GetAnimalRedList(id = 0, status = Status.OK, user_id = 0) 
 
 export async function UpdateAnimalRedList(animal = new Animal_Red_List_New(), buffers = null) {
     const result = await animal.UpdateAnimalRedList();
+    // CreateNewFolder(FolderInCloudinary.ModelsImages, animal.animal_red_list_id).catch((err) => WriteErrLog(err));
+
     if(result.resultCode != ResultCode.Success || buffers == null) {
         return result;
     }
+    //Tạo folder moi trong cloudinary
 
     const idNewAnimalInRedList = animal.animal_red_list_id;
     var isErro = false;
@@ -103,8 +109,8 @@ export async function PredictAnimal(buffer, user_id = 0) {
         }
     }
 
-    if(result.data[0].predict_id != 31) {
-        const promiseUpload = UploadImage(`${FolderInCloudinary.ModelsImages}/${result.data[0].predict_id}`, buffer);
+    if(result.resultCode == ResultCode.Success) {
+        const promiseUpload = UploadImage(`${FolderInCloudinary.ModelsImages}/${result.data[0].animal_red_list_id}`, buffer);
         promiseUpload
         .then(async (value) => {
             var path = value.url;

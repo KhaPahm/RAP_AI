@@ -4,6 +4,8 @@ import { OAuth2Client } from "google-auth-library";
 import { ResultCode } from "../interfaces/enum.interfaces.js"
 import { WriteErrLog } from "../helpers/index.helpers.js";
 import { Result } from "../interfaces/api.respone.interfaces.js";
+import fs from "fs";
+
 export async function SendingMail(email = "", title = "", content = "") {
     const outh2 = new OAuth2Client(
         GoogleOAuth2.clientId,
@@ -85,10 +87,13 @@ export async function SendingMailAttachment(fileName = "",localPath = "") {
     
         const result = await transport.sendMail(mailOptions);
         if(result != null) {
+            fs.unlinkSync(localPath);
             return new Result(ResultCode.Success, "Success");
         } else {
             return new Result(ResultCode.Err, `Lỗi gửi mail!`);
         }
+        
+
     } catch(err) {
         WriteErrLog(err)
         return new Result(ResultCode.Err, `Không thể gửi mail`);

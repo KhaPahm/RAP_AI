@@ -10,17 +10,19 @@ import path from "path";
 //Config enviroment variable
 config();
 
+//Test//
 // eslint-disable-next-line no-undef
 
 //<<<------Watcher----->>>
-// var watcher = chokidar.watch("./src/backup/daily/RAP_AI", {ignored: /^\./, persistent: true});
-// watcher
-//   .on('add', function(localPath) {
-// 	var flieName = path.parse(localPath);
-// 	var filePath = path.join(flieName.dir, flieName.base)
-// 	SendingMailAttachment(flieName.base, filePath)
-//   })
-//   .on('error', function(error) {console.error('Error happened', error);})
+var watcher = chokidar.watch("./src/backup/daily/RAP_AI", {ignored: /^\./, persistent: true});
+watcher
+  .on('add', async function(localPath) {
+	console.log(localPath);
+	var flieName = path.parse(localPath);
+	var filePath = path.join(flieName.dir, flieName.base);
+	SendingMailAttachment(flieName.base, filePath);
+  })
+  .on('error', function(error) {console.error('Error happened', error);})
 
 //------------------
 const port = process.env.PORT;
