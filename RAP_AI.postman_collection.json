@@ -7,133 +7,1981 @@
 	},
 	"item": [
 		{
-			"name": "{{HostRAP}}/user/login",
-			"event": [
+			"name": "User",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var res = pm.response.json();\r",
-							"if(res.data != null) {\r",
-							"    pm.environment.set('TokenRAP', res.data.accessToken);\r",
-							"} else {\r",
-							"    pm.environment.set('TokenRAP', \"\");\r",
-							"}\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
+					"name": "ResetPassword",
+					"event": [
 						{
-							"key": "userName",
-							"value": "rap_admin",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "admin2024",
-							"type": "text"
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
-					]
-				},
-				"url": {
-					"raw": "{{HostRAP}}/user/login",
-					"host": [
-						"{{HostRAP}}"
 					],
-					"path": [
-						"user",
-						"login"
-					]
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "oldPassword",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "user2024",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/user/resetPassword",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"user",
+								"resetPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateProfile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dayOfBirth",
+									"value": "2002-12-09",
+									"type": "text"
+								},
+								{
+									"key": "fullName",
+									"value": "Động Vật Quý Hiếm",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "0123456789",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/user/updateProfile",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"user",
+								"updateProfile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateAvt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/D:/DownloadBackup/306983271_1288271511999233_5009560731256478403_n.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/user/updateAvt",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"user",
+								"updateAvt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"if(res.data != null) {\r",
+									"    pm.environment.set('TokenRAP', res.data.accessToken);\r",
+									"} else {\r",
+									"    pm.environment.set('TokenRAP', \"\");\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userName",
+									"value": "rap_admin",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "user2024",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "userName",
+									"value": "minhtrang",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "userName",
+									"value": "officer1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "duWZaKKu",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/user/login",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{HostRAP}}/user/logout",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ExpandToken",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var res = pm.response.json();\r",
+									"if(res.data != null) {\r",
+									"    pm.environment.set('TokenRAP', res.data.newToken);\r",
+									"} \r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{HostRAP}}/user/expand",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"user",
+								"expand"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userName",
+									"value": "khapham1",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "khapham.work@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "user2024",
+									"type": "text"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "user2024",
+									"type": "text"
+								},
+								{
+									"key": "dayOfBirth",
+									"value": "2002-09-19",
+									"description": "//yyyy-MM-dd",
+									"type": "text"
+								},
+								{
+									"key": "fullName",
+									"value": "Pham Hoang Kha",
+									"type": "text"
+								},
+								{
+									"key": "phoneNumber",
+									"value": "038661138",
+									"description": "//10 so",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/user/register",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VerifyOtp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userName",
+									"value": "khapham1",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "khapham.work@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "otp",
+									"value": "4488",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/user/verifyOtp",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"user",
+								"verifyOtp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ResendOtp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userName",
+									"value": "khapham",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "khapham.work@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "otp",
+									"value": "51872801",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/user/resendOtp",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"user",
+								"resendOtp"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "{{HostRAP}}/user/resetPassword",
-			"event": [
+			"name": "RedList",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
+					"name": "GetAnimalRedList",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}"
+							}
 						],
-						"type": "text/javascript"
-					}
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "animalRedListId",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "OK",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/redList/getAnimalRedList",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"redList",
+								"getAnimalRedList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SearchAnimalRedList",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "cá sấu",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/redList/searchAnimalReadList",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"redList",
+								"searchAnimalReadList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAnimalRedListAfterLogin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "animalRedListId",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/redList/getAnimalRedListAfterLogin",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"redList",
+								"getAnimalRedListAfterLogin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PredictAnimal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/Admin/Downloads/434616464_792813479113296_4441675806379208406_n.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/redList/predictAnimal",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"redList",
+								"predictAnimal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PredictAnimalAfterLogin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/D:/HocTap/LastYear/LastProject/Image/26/pna6983_l2048.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/redList/predictAnimalAfterLogin",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"redList",
+								"predictAnimalAfterLogin"
+							]
+						}
+					},
+					"response": []
 				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "oldPassword",
-						"value": "admin2024",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "newPassword",
-						"value": "admin2025",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "confirmNewPassword",
-						"value": "admin2025",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "Token",
-						"value": "{{TokenRAP}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Menu",
+					"item": [
 						{
-							"key": "oldPassword",
-							"value": "admin2025",
-							"type": "text"
+							"name": "AddMenu",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "menuName",
+											"value": "Create Officer account",
+											"type": "text"
+										},
+										{
+											"key": "menuPath",
+											"value": "/admin/createOfficerAccount",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/addMenu",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"addMenu"
+									]
+								}
+							},
+							"response": []
 						},
 						{
-							"key": "newPassword",
-							"value": "admin2024",
-							"type": "text"
+							"name": "AddMenuToRole",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "menuId",
+											"value": "56",
+											"type": "text"
+										},
+										{
+											"key": "roleId",
+											"value": "2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/addMenuToRole",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"addMenuToRole"
+									]
+								}
+							},
+							"response": []
 						},
 						{
-							"key": "confirmNewPassword",
-							"value": "admin2024",
-							"type": "text"
+							"name": "UpdateMenu",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "menuId",
+											"value": "58",
+											"type": "text"
+										},
+										{
+											"key": "menuName",
+											"value": "Update status user",
+											"type": "text"
+										},
+										{
+											"key": "menuPath",
+											"value": "/admin/updateUserStatus",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/updateMenu",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"updateMenu"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetMenus",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "menuId",
+											"value": "",
+											"description": "Bỏ trống sẽ lấy hết",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "",
+											"description": "Bỏ trống sẽ lấy hết",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/getMenus",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"getMenus"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
-				"url": {
-					"raw": "{{HostRAP}}/user/resetPassword",
-					"host": [
-						"{{HostRAP}}"
-					],
-					"path": [
-						"user",
-						"resetPassword"
+				{
+					"name": "Role",
+					"item": [
+						{
+							"name": "AddRole",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "roleName",
+											"value": "test2",
+											"type": "text"
+										},
+										{
+											"key": "roleDescription",
+											"value": "dùng để test",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/addRole",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"addRole"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateRole",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "roleId",
+											"value": "9",
+											"type": "text"
+										},
+										{
+											"key": "roleName",
+											"value": "don't ues",
+											"type": "text"
+										},
+										{
+											"key": "roleDescription",
+											"value": "test don't use",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "XX",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/updateRole",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"updateRole"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetRoles",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "roleId",
+											"value": "",
+											"description": "Bỏ trống sẽ lấy hết",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/getRoles",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"getRoles"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Conservation Status",
+					"item": [
+						{
+							"name": "GetConservationStatus",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "conservationStatusId",
+											"value": "",
+											"description": "Bỏ trống sẽ lấy hết",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/getConservationStatus",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"getConservationStatus"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddConservationStatus",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "statusName",
+											"value": "Extinct",
+											"type": "text"
+										},
+										{
+											"key": "standName",
+											"value": "EX",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "",
+											"description": "//Bỏ trống mặc định là OK",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/addConservationStatus",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"addConservationStatus"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateConservationStatus",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "conservationStatusId",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "statusName",
+											"value": "Data Deficient",
+											"type": "text"
+										},
+										{
+											"key": "standName",
+											"value": "DD",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "A taxon is Data Deficient (DD) when there is inadequate information to make a direct, or indirect, assessment of its risk of extinction based on its distribution and/or population status. A taxon in this category may be well studied, and its biology well known, but appropriate data on abundance and/or distribution are lacking.",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "",
+											"description": "//Bỏ trống mặc định là OK",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/updateConservationStatus",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"updateConservationStatus"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Animal Type",
+					"item": [
+						{
+							"name": "GetAnimalType",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "animalTypeId",
+											"value": "",
+											"description": "Bỏ trống sẽ lấy hết",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/getAnimalType",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"getAnimalType"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddAnimalType",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "typeName",
+											"value": "Động vật có vú",
+											"description": "//Không được bỏ trống",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "",
+											"description": "//Bỏ trống mặc định là OK",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/addAnimalType",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"addAnimalType"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateConservationStatus",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "animalTypeId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "typeName",
+											"value": "Động vật không xương sống",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Đây là lớp động vật bậc thấp có hệ thần kinh xuất hiện đầu tiên trên Trái đất cách đây hàng tỷ năm. Lớp không xương sống được phân loại và đặt tên theo cấu trúc cơ thế của chúng là không có hệ xương khớp và xương sống. Lớp không xương sống rất đa dạng với hàng triệu loài khác nhau, ví dụ côn trùng, giun, bọ, các loài mực, bạch tuộc,...",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "OK",
+											"description": "//Bỏ trống mặc định là OK",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/updateAnimalType",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"updateAnimalType"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AnimalRedList",
+					"item": [
+						{
+							"name": "AddAnimalRedList",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "VNName",
+											"value": "Tôm Hùm Bông",
+											"type": "text"
+										},
+										{
+											"key": "ENName",
+											"value": "Tropical rock lobster",
+											"type": "text"
+										},
+										{
+											"key": "SCName",
+											"value": "Panulirus ornatus",
+											"type": "text"
+										},
+										{
+											"key": "animalInfor",
+											"value": "Tôm Hùm Bông có phạm vi phân bố rộng ở Ấn Độ Dương-Thái Bình Dương, từ Hồng Hải và KwaZulu-Natal ở phía tây đến Nhật Bản và Fiji ở phía đông. Trong hầu hết phạm vi phân bố của nó, tôm hùm bông bị đánh bắt bằng lao xiên hoặc lưới, trong khi ở Đông Bắc Australia, khai thác tôm hùm bông làm thủy sản thương mại đã tồn tại từ năm 1966 và thu hoạch các loài được quy định bởi cơ quan Great Barrier Reef Marine Park Authority.",
+											"type": "text"
+										},
+										{
+											"key": "predictID",
+											"value": "32",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "OK",
+											"type": "text"
+										},
+										{
+											"key": "animalTypeId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "conservationStatusID",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": [
+												"/D:/HocTap/LastYear/LastProject/Image/1/white-crowned-hornbill-1.jpg",
+												"/D:/HocTap/LastYear/LastProject/Image/1/white-crowned-hornbill-2.jpg",
+												"/D:/HocTap/LastYear/LastProject/Image/1/white-crowned-hornbill-3.jpg"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/addAnimalRedList",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"addAnimalRedList"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateAnimalRedList",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "animalRedListId",
+											"value": "34",
+											"type": "text"
+										},
+										{
+											"key": "VNName",
+											"value": "Tôm Hùm Bông 2",
+											"type": "text"
+										},
+										{
+											"key": "ENName",
+											"value": "Tropical rock lobster",
+											"type": "text"
+										},
+										{
+											"key": "SCName",
+											"value": "Panulirus ornatus",
+											"type": "text"
+										},
+										{
+											"key": "animalInfor",
+											"value": "Tôm Hùm Bông có phạm vi phân bố rộng ở Ấn Độ Dương-Thái Bình Dương, từ Hồng Hải và KwaZulu-Natal ở phía tây đến Nhật Bản và Fiji ở phía đông. Trong hầu hết phạm vi phân bố của nó, tôm hùm bông bị đánh bắt bằng lao xiên hoặc lưới, trong khi ở Đông Bắc Australia, khai thác tôm hùm bông làm thủy sản thương mại đã tồn tại từ năm 1966 và thu hoạch các loài được quy định bởi cơ quan Great Barrier Reef Marine Park Authority.",
+											"type": "text"
+										},
+										{
+											"key": "predictID",
+											"value": "31",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "OK",
+											"type": "text"
+										},
+										{
+											"key": "animalTypeId",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "conservationStatusID",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/updateAnimalRedList",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"updateAnimalRedList"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "GetUsersList",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "status",
+											"value": "ok",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/getUsersList",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"getUsersList"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateUserStatus",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "userId",
+											"value": "1011",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "XX",
+											"description": "XX: khóa | OK: active",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/updateUserStatus",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"updateUserStatus"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateOfficerAccount",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "userName",
+											"value": "officer1",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "khapham1909@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "user2024",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "confirmPassword",
+											"value": "user2024",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "dayOfBirth",
+											"value": "2002-09-19",
+											"description": "//yyyy-MM-dd",
+											"type": "text"
+										},
+										{
+											"key": "fullName",
+											"value": "Pham Hoang Kha",
+											"type": "text"
+										},
+										{
+											"key": "phoneNumber",
+											"value": "038661138",
+											"description": "//10 so",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/createOfficerAccount",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"createOfficerAccount"
+									]
+								}
+							},
+							"response": []
+						}
 					]
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Image",
+			"item": [
+				{
+					"name": "UpdateImage",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "imageID",
+									"value": "15",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "XX",
+									"description": "XX: đánh dấu xóa, WT: chờ, OK: bình thường",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/image/updateImage",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"image",
+								"updateImage"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Report",
+			"item": [
+				{
+					"name": "CreateReport",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "19 Nguyễn Hữu Thọ",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Nguyễn Trần Minh Trang",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "OK",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "lat",
+									"value": "10.732755215644659",
+									"type": "text"
+								},
+								{
+									"key": "lng",
+									"value": "106.69977065076775",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/D:/DownloadBackup/307445190_415735017368159_1549994843854118472_n.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/report/createReport",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"report",
+								"createReport"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetReport",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "reportId",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/report/getReport",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"report",
+								"getReport"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RecordAction",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "reportId",
+									"value": "48",
+									"type": "text"
+								},
+								{
+									"key": "action",
+									"value": "ACCEPT",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/report/recordAction",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"report",
+								"recordAction"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "History",
+			"item": [
+				{
+					"name": "GetHistory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "imageID",
+									"value": "15",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "XX",
+									"description": "XX: đánh dấu xóa, WT: chờ, OK: bình thường",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/history/getHistory",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"history",
+								"getHistory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteHistory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "animalRedListId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/history/deleteHistory",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"history",
+								"deleteHistory"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contribute",
+			"item": [
+				{
+					"name": "CreateContribute",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "ABC Test 2",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "test 2",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/D:/DownloadBackup/278527734_3128084970778541_2600183617924684359_n.jpg",
+										"/D:/DownloadBackup/279095195_711358593387755_7868529995389503639_n.jpg",
+										"/D:/DownloadBackup/287914848_743443556900873_6916739806603846884_n.jpg"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/contribute/createContribute",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"contribute",
+								"createContribute"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetContributeById",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "contributeId",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "images",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "contributeId",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/contribute/getContributeById",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"contribute",
+								"getContributeById"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContributeById",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{TokenRAP}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "contributeId",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "XX",
+									"type": "text"
+								},
+								{
+									"key": "animalRedListID",
+									"value": "34",
+									"type": "text"
+								},
+								{
+									"key": "lsImageAccept",
+									"value": "172-174-173",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{HostRAP}}/contribute/updateContributeById",
+							"host": [
+								"{{HostRAP}}"
+							],
+							"path": [
+								"contribute",
+								"updateContributeById"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "{{HostRAP}}/user/test",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "urlPath",
+							"value": "https://res.cloudinary.com/dpsux2vzu/image/upload/v1717641198/RAP/Test/From/tdhx1zwdzdzghkltvrmz.png",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "archiveFolder",
+							"value": "RAP/Test/To",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
 				"url": {
 					"raw": "{{HostRAP}}/user/test",
 					"host": [
@@ -142,66 +1990,6 @@
 					"path": [
 						"user",
 						"test"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "{{HostRAP}}/user/register",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "userName",
-							"value": "user01",
-							"type": "text"
-						},
-						{
-							"key": "email",
-							"value": "khapham1909@gmail.com",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "user2024",
-							"type": "text"
-						},
-						{
-							"key": "confirmPassword",
-							"value": "user2024",
-							"type": "text"
-						},
-						{
-							"key": "dayOfBirth",
-							"value": "2002-09-19",
-							"description": "//yyyy-MM-dd",
-							"type": "text"
-						},
-						{
-							"key": "fullName",
-							"value": "Pham Hoang Kha",
-							"type": "text"
-						},
-						{
-							"key": "phoneNumber",
-							"value": "038661138",
-							"description": "//10 so",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{HostRAP}}/user/register",
-					"host": [
-						"{{HostRAP}}"
-					],
-					"path": [
-						"user",
-						"register"
 					]
 				}
 			},
