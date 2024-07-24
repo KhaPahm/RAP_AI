@@ -12,6 +12,7 @@ import { Animal_Type } from "../models/animal_types.models.js";
 import { AddAnimalType, GetAnimalTypes, UpdateAnimalType } from "../services/animal_types.services.js";
 import { Animal_Red_List } from "../models/animal_red_list.models.js";
 import { AddAnimalRedList } from "../services/animal_red_list.models.js";
+import { CreateOfficerAccount, GetUsersList, UpdateUserStatus } from "../services/user.services.js";
 
 //#region Handle menu
 export async function _AddNewMenu(req, res) {
@@ -287,4 +288,58 @@ export async function _UpdateAnimalType(req, res) {
 
 //#region Handle image 
 
+//#endregion
+
+//#region Handle user
+export async function _GetUsersList(req, res) {
+    const status = req.body.status || "";
+    const result = await GetUsersList(status);
+
+    if(result.resultCode == ResultCode.Success) {
+        res.json(ApiRespone.Success(result.data.length, result.data));
+    }
+    else {
+        res.json(ApiRespone.Err(100, result.message));
+    }
+}
+
+export async function _UpdateUser(req, res) {
+    const userId = req.body.userId || 0;
+	const status = req.body.status || "";
+
+    if(userId == 0 || status == "") {
+        res.json(ApiRespone.Err(100, "Không được để trống userId và status!"));
+    } else if (status.toUpperCase() != "OK" && status.toUpperCase() != "XX") {
+        res.json(ApiRespone.Err(100, "Chỉ nhận giá trị status là XX/OK"));
+    } else {
+        const result = await UpdateUserStatus(userId, status);
+        if(result.resultCode == ResultCode.Success) {
+            res.json(ApiRespone.Success(1, result.data));
+        }
+        else {
+            res.json(ApiRespone.Err(100, result.message));
+        }
+    }
+}
+
+export async function _CreateOfficerAccount(req, res) {
+    const userName = req.body.userName || "";
+	const email = req.body.email || "";
+	const dayOfBirth = req.body.dayOfBirth || "";
+	const fullName = req.body.fullName || "";
+	const phoneNumber = req.body.phoneNumber || "";
+
+    if(userName == "" && email == "" && dayOfBirth == "" && fullName == "" && phoneNumber == "") {
+        res.json(ApiRespone.Err(100, "Vui lòng điền đầy đủ thông tin!"));
+    }
+    else {
+        const result = await CreateOfficerAccount(userName, email, dayOfBirth, fullName, phoneNumber);
+        if(result.resultCode == ResultCode.Success) {
+            res.json(ApiRespone.Success(1, result.data));
+        }
+        else {
+            res.json(ApiRespone.Err(100, result.message));
+        }
+    }
+}
 //#endregion

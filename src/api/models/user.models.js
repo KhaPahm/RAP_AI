@@ -59,9 +59,13 @@ export class UserInfor {
 	}
 
 	static async Login(user_name = "", password = "") {
-		const strQuery = `SELECT u.*, ur.role_id FROM User u left join User_Role ur ON u.user_id = ur.user_id WHERE user_name = "${user_name}" AND status = "OK"`;
+		const strQuery = `SELECT u.*, ur.role_id FROM User u left join User_Role ur ON u.user_id = ur.user_id WHERE user_name = "${user_name}" AND status <> "WT"`;
 		const result = await query(strQuery);
 		if(result.resultCode == ResultCode.Success && result.data.length == 1) {
+			if(result.data[0].status == "XX") {
+				return new Result(ResultCode.Warning, "Tài khoản của bạn đã bị khóa vui lòng liên hệ với đội ngũ phát triển để để biết thêm chi tiết!", null);
+			}
+
 			//So sánh password
 			const match = await compare(password, result.data[0].password);
 			//Nếu như mật khẩu match
@@ -305,6 +309,63 @@ export class UserInfor {
 
 	static async AddRoleForAccount() {
 
+	}
+
+	static async GetUsersList(status = "") {
+		const strQuery = `select u.user_id, u.user_name, u.email, u.day_of_birth, 
+							u.status, u.full_name, u.phone_number, r.role_id, 
+							r.role_name, r.role_description, i.image_public_path as avt
+						from User u 
+						inner join User_Role ur on u.user_id = ur.user_id
+						left join Role r on ur.role_id = r.role_id
+						left join Image i on u.avt = i.image_id
+						where r.status ${status == "" ? `<> "XX"` : `= "${status}"`} and r.role_id <> 1;`;
+
+		const result = await query(strQuery);
+		return result;
+	}
+
+	static async UpdateUserStatus(userId = 0, status = Status.OK) {
+		const strQuery = `UPDATE User SET status = "${status}" WHERE user_id = ${userId};`;
+
+		const result = await query(strQuery);
+		return result;
+	}
+
+	static async CreateOfficerAccount(userName = "", email = "", dayOfBirth = "", fullName = "", phoneNumber = "") {
+		//Kieemr tra user da ton tai hay chua
+		const strQueryCheckUser = `SELECT * FROM User WHERE email = "${email}"`;
+		const result = await query(strQueryCheckUser);
+		if(result.data.length != 0) {
+			return new Result(ResultCode.Warning, "Tài khoản hoặc email đã tồn tại. Vui lòng thử lại!");
+		}
+
+		const password = this.generatePassword();
+		const hashedPassword = await UserInfor.HashPassword(password);
+		
+		const strQuery = 
+			`INSERT INTO User(user_name, password, email, day_of_birth, full_name, phone_number, status)
+			VALUES("${userName}", "${hashedPassword}", "${email}", "${dayOfBirth}", "${fullName}", "${phoneNumber}", "OK")`;
+
+		const resultRegister = await query(strQuery);
+
+		if(resultRegister.resultCode == ResultCode.Success)
+		{
+			const resultSetRole = Role.SetRoleForUser(resultRegister.data.insertId, 2);
+			return new Result(ResultCode.Success, "Success", {userName: userName, password: password});
+		}
+		else 
+			return new Result(resultRegister.resultCode, "Lỗi quá trình đăng ký!", null);
+	}
+
+	static generatePassword() {
+		var length = 8,
+			charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+			retVal = "";
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			retVal += charset.charAt(Math.floor(Math.random() * n));
+		}
+		return retVal;
 	}
 
 }

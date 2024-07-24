@@ -8,6 +8,7 @@ import { UserInfor } from "../models/user.models.js";
 import { SendingMail } from "./mail.services.js";
 import { UpdateAvt, UploadImage } from "./cloudinary.services.js";
 import { Status } from "../interfaces/enum.interfaces.js";
+import passport from "passport";
 
 
 export async function Login(userName = "", password = "") {
@@ -91,6 +92,39 @@ export async function VerifyOTP(user_name = "", email = "", otp = 0) {
 export async function UpdateUser(user = new UserInfor()) {
 	const result =  await user.Update();
 	return result;
+}
+
+export async function GetUsersList(status = "") {
+	return await UserInfor.GetUsersList(status);
+}
+
+export async function UpdateUserStatus(userId = 0, status = Status.OK) {
+	return await UserInfor.UpdateUserStatus(userId, status);
+}
+
+export async function CreateOfficerAccount(userName = "", email = "", dayOfBirth = "", fullName = "", phoneNumber = "") {
+	const resultRegister = await UserInfor.CreateOfficerAccount(userName, email, dayOfBirth, fullName, phoneNumber);
+	//Nếu ghi dữ liệu vào db thành công thì gửi mail xác thực
+	if(resultRegister.resultCode == ResultCode.Success) 
+	{
+		//Gửi mail xác thực
+		const resultEmailSending = await SendingMail(email, "Account information", `Hi ${fullName}, <br> Welcome to RAP system, your new account was registed by this email. Here is your account information: <br> <ul> <li>User name: ${resultRegister.data.userName}</li> <li>Password: <b>${resultRegister.data.password}</b></li> </ul><br><i>This is a private infomation, don't share for anyone!</i>`, userName);
+		//Nếu gửi mail thành công
+		if(resultEmailSending == ResultCode.Success) {
+			//Nếu gủi mail khoogn thành công thì xóa mã OTP trong db
+			const reusultClearOTP = await UserInfor.ClearOTP(userName);
+			if(reusultClearOTP != ResultCode.Success)
+				WriteErrLog(reusultClearOTP.message);
+		}
+		resultEmailSending.data = {
+			email,
+			userName
+		}
+		return resultEmailSending; //Trả về kết quá gửi mail
+	}
+
+	//Nếu có lỗi quá trình thêm vào db thì trả lỗi thẳng ra ngoài
+	return resultRegister;
 }
 
 // export async function UpdateUserAvt(user = new UserInfor(), buffer) {
