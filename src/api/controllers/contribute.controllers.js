@@ -14,7 +14,11 @@ export async function _AddNewContribute(req, res) {
 
     if(name == "" || description == "" || buffers == null) {
         res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
-    } else {
+    }
+    else if(buffers.length == 0) {
+        res.json(ApiRespone.Err(100, "Không được để trống hình ảnh!"));
+    }
+    else {
         const contribute = new Contribute(0, name, description, ConverDateTimeToString(new Date), status)
         const result = await AddContribute(contribute, buffers, userId);
         if(result.resultCode == ResultCode.Success) {
@@ -40,7 +44,7 @@ export async function _GetContributeById(req, res) {
     }
     
     if(result.resultCode == ResultCode.Success) {
-        res.json(ApiRespone.Success(1, result.data));
+        res.json(ApiRespone.Success(result.data.length, result.data));
     }
     else {
         res.json(ApiRespone.Err(100, result.message));

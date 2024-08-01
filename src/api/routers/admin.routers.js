@@ -28,9 +28,9 @@ router.post("/updateAnimalType", upload.any(), TokenValidator, CheckUrlRole, _Up
 router.post("/addAnimalRedList", upload.array("images"), TokenValidator, CheckUrlRole, _AddAnimalRedList);
 router.post("/updateAnimalRedList", upload.array("images"), TokenValidator, CheckUrlRole, _UpdateAnimalRedList);
 
-router.post("/getUsersList", upload.any(), TokenValidator, _GetUsersList);
-router.post("/updateUserStatus", upload.any(), TokenValidator, _UpdateUser);
-router.post("/createOfficerAccount", upload.any(), TokenValidator, _CreateOfficerAccount);
+router.post("/getUsersList", upload.any(), TokenValidator, CheckUrlRole, _GetUsersList);
+router.post("/updateUserStatus", upload.any(), TokenValidator, CheckUrlRole, _UpdateUser);
+router.post("/createOfficerAccount", upload.any(), TokenValidator, CheckUrlRole, _CreateOfficerAccount);
 
 
 export default router;

@@ -69,7 +69,7 @@ export async function _UpdateAnimalRedList(req, res) {
     const animalTypeId = Number(req.body.animalTypeId) || 0;
     const conservationStatusID = Number(req.body.conservationStatusID) || 0;
     var buffers = req.files || null;
-    if(buffers.length == 0) {
+    if(buffers != null && buffers.length == 0) {
         buffers = null;
     }
     
