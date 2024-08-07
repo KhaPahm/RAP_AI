@@ -58,12 +58,15 @@ export class UserInfor {
 		return hashedPassword;
 	}
 
-	static async Login(user_name = "", password = "") {
+	static async Login(user_name = "", password = "", isMobile = false) {		
 		const strQuery = `SELECT u.*, ur.role_id FROM User u left join User_Role ur ON u.user_id = ur.user_id WHERE user_name = "${user_name}" AND status <> "WT"`;
 		const result = await query(strQuery);
 		if(result.resultCode == ResultCode.Success && result.data.length == 1) {
 			if(result.data[0].status == "XX") {
 				return new Result(ResultCode.Warning, "Tài khoản của bạn đã bị khóa vui lòng liên hệ với đội ngũ phát triển để để biết thêm chi tiết!", null);
+			}
+			if(result.data[0].role_id == 3 && isMobile == false) {
+				return new Result(ResultCode.Warning, "Tài khoản hoặc mật khẩu không đúng!", null);
 			}
 
 			//So sánh password

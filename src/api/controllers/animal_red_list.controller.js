@@ -59,15 +59,15 @@ export async function _GetAnimalRedList(req, res) {
 }
 
 export async function _UpdateAnimalRedList(req, res) {
-    const id = req.body.animalRedListId;
-    const VNName = req.body.VNName;
-    const ENName = req.body.ENName;
-    const SCName = req.body.SCName;
-    const animalInfor = req.body.animalInfor;
-    const predictID = req.body.predictID;
+    const id = Number(req.body.animal_red_list_id) || null;
+    const VNName = req.body.vn_name;
+    const ENName = req.body.en_name;
+    const SCName = req.body.sc_name;
+    const animalInfor = req.body.animal_infor;
+    const predictID = Number(req.body.predict_id) || null;
     const status = req.body.status || "OK";
-    const animalTypeId = Number(req.body.animalTypeId) || 0;
-    const conservationStatusID = Number(req.body.conservationStatusID) || 0;
+    const animalTypeId = Number(req.body.animal_type_id) || 0;
+    const conservationStatusID = Number(req.body.conservation_status_id) || 0;
     var buffers = req.files || null;
     if(buffers != null && buffers.length == 0) {
         buffers = null;

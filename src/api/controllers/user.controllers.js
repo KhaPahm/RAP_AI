@@ -7,8 +7,11 @@ import { UpdateAvt } from "../services/cloudinary.services.js";
 export async function _LogIn(req, res) {
 	const userName = req.body.userName;
 	const password = req.body.password;
+	const isMobile = req.body.isMobile || "false";
 
-	const userInfor = await Login(userName, password);
+	const bIsMobile = (isMobile?.toLowerCase?.() === 'true');	
+
+	const userInfor = await Login(userName, password, bIsMobile);
 
 	if (userInfor.resultCode == ResultCode.Success) {
 		res.json(APIRespone.Success(1, userInfor.data));

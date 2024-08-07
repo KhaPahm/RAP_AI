@@ -11,8 +11,8 @@ import { Status } from "../interfaces/enum.interfaces.js";
 import passport from "passport";
 
 
-export async function Login(userName = "", password = "") {
-	const _userInfor = await UserInfor.Login(userName, password);
+export async function Login(userName = "", password = "", isMobile = false) {
+	const _userInfor = await UserInfor.Login(userName, password, isMobile);
 	return _userInfor;
 }
 
