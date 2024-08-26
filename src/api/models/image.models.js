@@ -85,6 +85,11 @@ export default class ImageModel {
         return result;
     }
 
+    static async DeleteImageByImageId(image_id = 0) {
+        const result = await query(`DELETE FROM Image where image_id = ${image_id};`);
+        return result;
+    }
+
     static async UpdateContributeImage(imageId, newPublicPath, newLocalPath, newStatus) {
         const strQuery = `UPDATE Image SET image_public_path = "${newPublicPath}"
                                         , image_local_path = "${newLocalPath}" 

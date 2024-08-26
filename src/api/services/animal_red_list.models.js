@@ -4,7 +4,7 @@ import { AnimalSearchTypes, FolderInCloudinary, ImageType, ResultCode, Status } 
 import { Animal_Red_List } from "../models/animal_red_list.models.js";
 import { History_Watch } from "../models/history_watch.js";
 import ImageModel from "../models/image.models.js";
-import { UploadImage, CreateNewFolder } from "./cloudinary.services.js";
+import { UploadImage, CreateNewFolder, DeleteImage } from "./cloudinary.services.js";
 import { ConverDateTimeToString } from "../helpers/string.helpers.js";
 import { Animal_Red_List_New } from "../models/animal_red_list_update_new.model.js";
 
@@ -73,7 +73,7 @@ export async function UpdateAnimalRedList(animal = new Animal_Red_List_New(), bu
     const idNewAnimalInRedList = animal.animal_red_list_id;
     var isErro = false;
 
-    buffers.forEach(buffer => {
+    await buffers.forEach(buffer => {
         const promiseUpload = UploadImage(FolderInCloudinary.RedListImages,  buffer.buffer);
         promiseUpload
             .then(async (value) => {
@@ -95,6 +95,71 @@ export async function UpdateAnimalRedList(animal = new Animal_Red_List_New(), bu
     
     const imagesResult = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
     animal.images = imagesResult.data;
+    return new Result(ResultCode.Success, "Success", animal);
+}
+
+export async function UpdateAnimalRedListEx(animal = new Animal_Red_List_New(), buffers = null, images_delete = "") {
+    const result = await animal.UpdateAnimalRedList();
+    // CreateNewFolder(FolderInCloudinary.ModelsImages, animal.animal_red_list_id).catch((err) => WriteErrLog(err));
+    //Nếu lỗi trả về lỗi
+    //Hoặc thành công mà không có cập nhật ảnh thì trả thẳng về kết quả
+    if(result.resultCode != ResultCode.Success || (result.resultCode == ResultCode.Success && buffers == null && images_delete == "")) {
+        const imagesResult = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
+        animal.images = imagesResult.data;
+        
+        return result;
+    }
+    
+    //Delete ảnh cũ
+    if(images_delete != "") {
+        const lsImage = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
+        var listImageAccept = images_delete.split("-");
+
+        await lsImage.data.forEach(async (image) => {
+            if(listImageAccept.includes(image.image_id.toString())) {
+                const temp1 = image.image_public_path.split("/");
+                const fileName = temp1[temp1.length-1];
+                await DeleteImage(FolderInCloudinary.RedListImages, fileName);
+            }
+        });
+
+        await listImageAccept.forEach(async (image_id) => {
+            await ImageModel.DeleteImageByImageId(image_id);
+        });
+    }
+
+    //Update ảnh mới
+    if(buffers != null) {
+            const idNewAnimalInRedList = animal.animal_red_list_id;
+            var isErro = false;
+        
+            await buffers.forEach(buffer => {
+                const promiseUpload = UploadImage(FolderInCloudinary.RedListImages,  buffer.buffer);
+                promiseUpload
+                    .then(async (value) => {
+                        var path = value.url;
+                        const newImage = new ImageModel(0, path, path, animal.vn_name, ImageType.System, Status.OK, idNewAnimalInRedList);
+                        const resultAddImage = await newImage.AddNewImage();
+                        if(resultAddImage.resultCode != ResultCode.Success) {
+                            isErro = true;
+                        }
+                    })
+                    .catch((err) => {
+                        isErro = true;
+                        WriteErrLog(err);
+                    });
+            });
+        
+            if(isErro)
+                return new Result("Erro", "Lỗi trá trình cập nhật ảnh!")
+    }
+
+    const imagesResult = await ImageModel.GetImageByAnimalRedList(animal.animal_red_list_id);
+    console.log(imagesResult);
+    
+
+    animal.images = imagesResult.data;
+
     return new Result(ResultCode.Success, "Success", animal);
 }
 

@@ -1,5 +1,5 @@
 import { ResultCode, Status } from "../interfaces/enum.interfaces.js";
-import { GetAnimalRedList, PredictAnimal, SearchAnimalRedList, UpdateAnimalRedList } from "../services/animal_red_list.models.js";
+import { GetAnimalRedList, PredictAnimal, SearchAnimalRedList, UpdateAnimalRedList, UpdateAnimalRedListEx } from "../services/animal_red_list.models.js";
 import ApiRespone from "../interfaces/api.respone.interfaces.js";
 import { Animal_Red_List } from "../models/animal_red_list.models.js";
 import { AddAnimalRedList } from "../services/animal_red_list.models.js";
@@ -79,6 +79,37 @@ export async function _UpdateAnimalRedList(req, res) {
     else {
         const animal = new Animal_Red_List_New(id, VNName, ENName, SCName, animalInfor, status, predictID, animalTypeId, conservationStatusID);
         const result = await UpdateAnimalRedList(animal, buffers);
+        if(result.resultCode == ResultCode.Success) {
+            res.json(ApiRespone.Success(1, result.data));
+        }
+        else {
+            res.json(ApiRespone.Err(100, result.message));
+        }
+    }
+}
+//Bổ sung cập nhật đánh dấu ảnh xóa và ảnh thêm mới
+export async function _UpdateAnimalRedListEx(req, res) {
+    const id = Number(req.body.animal_red_list_id) || null;
+    const VNName = req.body.vn_name;
+    const ENName = req.body.en_name;
+    const SCName = req.body.sc_name;
+    const animalInfor = req.body.animal_infor;
+    const predictID = Number(req.body.predict_id) || null;
+    const status = req.body.status || "OK";
+    const animalTypeId = Number(req.body.animal_type_id) || 0;
+    const conservationStatusID = Number(req.body.conservation_status_id) || 0;
+    const imagesDelete = req.body.images_delete || "";
+    var buffers = req.files || null;
+    if(buffers != null && buffers.length == 0) {
+        buffers = null;
+    }
+    
+    if(!id || animalTypeId == 0 || conservationStatusID == 0 || !VNName || !ENName || !SCName || !animalInfor || !predictID) {
+        res.json(ApiRespone.Err(100, "Dữ liệu trống!"));
+    }
+    else {
+        const animal = new Animal_Red_List_New(id, VNName, ENName, SCName, animalInfor, status, predictID, animalTypeId, conservationStatusID);
+        const result = await UpdateAnimalRedListEx(animal, buffers, imagesDelete);
         if(result.resultCode == ResultCode.Success) {
             res.json(ApiRespone.Success(1, result.data));
         }

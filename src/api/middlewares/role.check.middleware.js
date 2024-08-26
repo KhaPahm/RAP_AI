@@ -9,3 +9,13 @@ export async function CheckUrlRole(req, res, next) {
     else 
         res.json(ApiRespone.Err(100, "Bạn không có quyền truy cập chức năng này!"));
 }
+
+export async function CheckOTP(req, res, next) {
+    const user = req.user;
+    const inputOtp = req.otp;
+    const accessTokenOTP = user.otp;
+    if(inputOtp === accessTokenOTP)
+        next();
+    else 
+        res.json(ApiRespone.Err(100, "OTP không đúng"));
+}

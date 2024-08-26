@@ -32,15 +32,21 @@ export class UserInfor {
 		this.role = role;
 	}
 
-	static async GenToken (payload, accessToken = true, exp = "1d") {
+	static async GenToken (payload, accessToken = true, exp = "1d", tempToken = false) {
 		const options = {
 			// expiresIn: accessToken ? "10m" : "14d"
 			expiresIn: exp
 		};
 	
-		const secrectSign = accessToken ? 
-		// eslint-disable-next-line no-undef
-			process.env.JWT_SIGN_ACCESS_KEY : process.env.JWT_SIGN_REFRESH_KEY;
+		var secrectSign = "";
+		if(tempToken) {
+			secrectSign = process.env.JWT_SIGN_TEMP_ACCESS_KEY;
+		}
+		else {
+			secrectSign = accessToken ? 
+				process.env.JWT_SIGN_ACCESS_KEY : process.env.JWT_SIGN_REFRESH_KEY;
+		}
+		
 	
 		try {
 			const access_token = await jwt.sign(payload, secrectSign, options);
@@ -369,6 +375,49 @@ export class UserInfor {
 			retVal += charset.charAt(Math.floor(Math.random() * n));
 		}
 		return retVal;
+	}
+
+	//Quên mật khẩu
+	static async CheckUserForgotPassword(userName = "") {
+		const strQuery = `SELECT u.user_id, u.email FROM User u WHERE user_name = "${userName}" AND status <> "WT"`;
+		const result = await query(strQuery);
+		if(result.resultCode == ResultCode.Success && result.data.length == 1) {
+			if(result.data[0].status == "XX") {
+				return new Result(ResultCode.Warning, "Tài khoản của bạn đã bị khóa vui lòng liên hệ với đội ngũ phát triển để để biết thêm chi tiết!", null);
+			}
+
+			var otp = "";
+			for(var i = 0; i < 4; i++) {
+				otp = `${otp}${Math.floor(Math.random() * 9).toString()}`;
+			}
+			const currentDate = new Date();
+			const otp_exp = currentDate.getTime() + 300000; //5p
+
+			const strQueryUpdate = `UPDATE User SET otp = "${otp}",
+													otp_exp = ${otp_exp} where user_id = ${result.data[0].user_id}`;
+
+			const resultUpdateOTP = await query(strQueryUpdate);
+
+			const tempAccessToken = await UserInfor.GenToken({
+				userId: result.data[0].user_id, 
+				userName: userName,
+				email: result.data[0].email,
+				otp
+			}, true, "5m", true);
+
+			return new Result(ResultCode.Success, "Success", {
+				user_name: userName,
+				user_id: result.data[0].user_id,
+				email: result.data[0].email,
+				otp: otp,
+				accessToken: tempAccessToken
+			});
+		}
+		else if(result.resultCode == ResultCode.Success && result.data.length == 0) {
+			return new Result(ResultCode.Warning, "Tài khoản hoặc mật khẩu không đúng!", null);
+		}
+
+		return new Result(ResultCode.Err, "Lỗi quá trình đăng nhập!", null);
 	}
 
 }

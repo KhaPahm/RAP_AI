@@ -64,7 +64,7 @@ export async function Register(userName = "", password = "", email = "", dayOfBi
 		//Gửi mail xác thực
 		const resultEmailSending = await SendingMail(email, "Verify account", `Your OTP is: ${resultRegister.data.otp}`, userName);
 		//Nếu gửi mail thành công
-		if(resultEmailSending == ResultCode.Success) {
+		if(resultEmailSending.resultCode != ResultCode.Success) {
 			//Nếu gủi mail khoogn thành công thì xóa mã OTP trong db
 			const reusultClearOTP = await UserInfor.ClearOTP(userName);
 			if(reusultClearOTP != ResultCode.Success)
@@ -110,7 +110,7 @@ export async function CreateOfficerAccount(userName = "", email = "", dayOfBirth
 		//Gửi mail xác thực
 		const resultEmailSending = await SendingMail(email, "Account information", `Hi ${fullName}, <br> Welcome to RAP system, your new account was registed by this email. Here is your account information: <br> <ul> <li>User name: ${resultRegister.data.userName}</li> <li>Password: <b>${resultRegister.data.password}</b></li> </ul><br><i>This is a private infomation, don't share for anyone!</i>`, userName);
 		//Nếu gửi mail thành công
-		if(resultEmailSending == ResultCode.Success) {
+		if(resultEmailSending.resultCode != ResultCode.Success) {
 			//Nếu gủi mail khoogn thành công thì xóa mã OTP trong db
 			const reusultClearOTP = await UserInfor.ClearOTP(userName);
 			if(reusultClearOTP != ResultCode.Success)
@@ -127,26 +127,25 @@ export async function CreateOfficerAccount(userName = "", email = "", dayOfBirth
 	return resultRegister;
 }
 
-// export async function UpdateUserAvt(user = new UserInfor(), buffer) {
-//     var isErro = false;
-// 	var path = "";
-// 	const promiseUpload = UpdateAvt(FolderInCloudinary.UserPersionalImage,  buffer, user.userId);
-//         promiseUpload
-//             .then((value) => {
-//                 path = value.url;
-                
-//             })
-//             .catch((err) => {
-//                 isErro = true;
-//                 WriteErrLog(err);
-//             });
 
-// 	if(isErro) {
-// 		return new Result("Erro", "Lỗi trá trình cập nhật ảnh!")
-// 	}
+export async function CheckUserForgotPasswordord(userName = "") {
+	const resultCheck = await UserInfor.CheckUserForgotPassword(userName);
+	if(resultCheck.resultCode != ResultCode.Success) {
+		return resultCheck;
+	}
 
-// 	const resultGetNewAvt = await ImageModel.GetAvtByUserId(user.userId);
-// 	console.log(resultGetNewAvt);
+	//Gửi mail xác thực
+	const resultEmailSending = await SendingMail(resultCheck.data.email, "Reset Password", `Your OTP is: ${resultCheck.data.otp}`);
+
+	//Nếu gửi mail thành công
+	if(resultEmailSending.resultCode != ResultCode.Success) {
+		//Nếu gủi mail khoogn thành công thì xóa mã OTP trong db
+		const reusultClearOTP = await UserInfor.ClearOTP(userName);
+		if(reusultClearOTP != ResultCode.Success)
+			WriteErrLog(reusultClearOTP.message);
+
+		return resultEmailSending;
+	}
 	
-// 	return new Result(ResultCode.Success, "Success", {img: ""});
-// }
+	return resultCheck;
+}

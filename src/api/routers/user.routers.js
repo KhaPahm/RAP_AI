@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { _LogIn, _SetPassword, _Register, _VerifyOtp, _ReSendOtp, _UpdateUser, _UpdateAvt, _Logout, _ExpandToken } from "../controllers/user.controllers.js";
+import { _LogIn, _SetPassword, _Register, _VerifyOtp, _ReSendOtp, _UpdateUser, _UpdateAvt, _Logout, _ExpandToken, _CheckForgotPassword } from "../controllers/user.controllers.js";
 import Multer from "multer";
-import { TokenValidator, TokenValidatorSkipExpired } from "../middlewares/verify.token.middleware.js";
-import { CheckUrlRole } from "../middlewares/role.check.middleware.js";
+import { TokenForgotPassword, TokenValidator, TokenValidatorSkipExpired } from "../middlewares/verify.token.middleware.js";
+import { CheckOTP, CheckUrlRole } from "../middlewares/role.check.middleware.js";
 import { test } from "../controllers/index.controllers.js";
 
 const upload = Multer();
@@ -17,6 +17,8 @@ router.post("/resendOtp", upload.any(), _ReSendOtp);
 router.post("/verifyOtp", upload.any(), _VerifyOtp);
 router.post("/updateProfile", upload.any(),TokenValidator, _UpdateUser);
 router.post("/updateAvt", upload.single("image"),TokenValidator, _UpdateAvt);
+router.post("/forgotPassword", upload.any(), _CheckForgotPassword);
+router.post("/verifyOtpEx", upload.any(), TokenForgotPassword, CheckOTP);
 // router.post("/addRedList", upload.any(),TokenValidator, CheckUrlRole);
 // router.post("/test", upload.array("image"), test);
 router.post("/test", upload.any(), test);

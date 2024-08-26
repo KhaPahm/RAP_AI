@@ -1,4 +1,4 @@
-import { Login, RessetPassword, Register, VerifyOTP, ReSendOTP, UpdateUser, Logout, ExpandToken } from "../services/user.services.js";
+import { Login, RessetPassword, Register, VerifyOTP, ReSendOTP, UpdateUser, Logout, ExpandToken, CheckUserForgotPasswordord } from "../services/user.services.js";
 import APIRespone from "../interfaces/api.respone.interfaces.js";
 import { FolderInCloudinary, ResultCode } from "../interfaces/enum.interfaces.js";
 import { UserInfor } from "../models/user.models.js";
@@ -131,4 +131,32 @@ export async function _UpdateAvt(req, res) {
                 WriteErrLog(err);
 				res.json(APIRespone.Err(100, "Lỗi quá trình cập nhật ảnh đại diện!"));
             });
+}
+
+export async function _CheckForgotPassword(req, res) {
+	const userName = req.body.user_name ?? "";
+	if(userName == "") {
+		res.json(APIRespone.Err(100, "Không được để trống user_name"));
+	}
+
+	const result = await CheckUserForgotPasswordord(userName);
+	if(result.resultCode == ResultCode.Success) {
+		res.json(APIRespone.Success(1, result.data));
+	} else {
+		res.json(APIRespone.Err(100, result.message));
+	}
+}
+
+export async function _VerifyOtpEx(req, res) {
+	const userName = req.user.userName;
+	const email = req.user.email;
+	const otp = req.body.otp;
+
+	const result = await VerifyOTP(userName, email, otp);
+
+	if(result.resultCode == ResultCode.Success) {
+		res.json(APIRespone.Success(0, null));
+	} else {
+		res.json(APIRespone.Err(100, result.message));
+	}
 }
