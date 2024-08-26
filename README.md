@@ -2,6 +2,20 @@
 
 <ol>
   <li>
+    Đảm bảo đăng ký các service:
+    <ul>
+      <li>
+        Gmail của google dùng để gửi mail
+      </li>
+      <li>
+        Dịch vụ lưu trữ cloud của Cloudinary
+      </li>
+      <li>
+        Tạo database
+      </li>
+    </ul>
+  </li>
+  <li>
     Hệ thống cần các config trong thư mục config bao gồm
     <ul>
       <li>
@@ -54,4 +68,21 @@
       </li>
     </ul>
   </li>
+
+  <li>
+    Thêm các file log để ghi log của hệ thống. Trong thư mục src/api thêm thư mục logs và tạo các file: <b>err.log</b> và <b>infor.log</b>
+  </li>
+
+  <li>
+    Dùng lệnh: npm install để cài đặt các package cần thiết.
+  </li>
+
+  <li>
+    Dùng lệnh npm install để khởi chạy.
+  </li>
+
+  <li>
+    Dùng file RAP_AI.postman_collection.json import vào POSTMAN để gọi các API
+  </li>
+  
 </ol>
