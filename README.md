@@ -74,11 +74,11 @@
   </li>
 
   <li>
-    Dùng lệnh: npm install để cài đặt các package cần thiết.
+    Dùng lệnh: <i><b>npm install</b></i> để cài đặt các package cần thiết.
   </li>
 
   <li>
-    Dùng lệnh npm install để khởi chạy.
+    Dùng lệnh <i><b>npm start</b></i> để khởi chạy.
   </li>
 
   <li>
