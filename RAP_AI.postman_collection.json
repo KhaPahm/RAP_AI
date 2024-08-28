@@ -188,14 +188,12 @@
 								{
 									"key": "userName",
 									"value": "rap_admin",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "password",
 									"value": "user2024",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "userName",
@@ -212,11 +210,18 @@
 								{
 									"key": "userName",
 									"value": "officer1",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "password",
 									"value": "duWZaKKu",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "isUser",
+									"value": "false",
 									"type": "text"
 								}
 							]
@@ -669,12 +674,12 @@
 									"formdata": [
 										{
 											"key": "menuName",
-											"value": "Create Officer account",
+											"value": "Update Animal Extend",
 											"type": "text"
 										},
 										{
 											"key": "menuPath",
-											"value": "/admin/createOfficerAccount",
+											"value": "/admin/updateAnimalRedListEx",
 											"type": "text"
 										}
 									]
@@ -707,12 +712,12 @@
 									"formdata": [
 										{
 											"key": "menuId",
-											"value": "56",
+											"value": "60",
 											"type": "text"
 										},
 										{
 											"key": "roleId",
-											"value": "2",
+											"value": "1",
 											"type": "text"
 										}
 									]
@@ -1384,6 +1389,89 @@
 									"path": [
 										"admin",
 										"updateAnimalRedList"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UpdateAnimalRedListEx",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{TokenRAP}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "animal_red_list_id",
+											"value": "34",
+											"type": "text"
+										},
+										{
+											"key": "vn_name",
+											"value": "Tôm Hùm Bông 2",
+											"type": "text"
+										},
+										{
+											"key": "en_name",
+											"value": "Tropical rock lobster",
+											"type": "text"
+										},
+										{
+											"key": "sc_name",
+											"value": "Panulirus ornatus",
+											"type": "text"
+										},
+										{
+											"key": "animal_infor",
+											"value": "Tôm Hùm Bông có phạm vi phân bố rộng ở Ấn Độ Dương-Thái Bình Dương, từ Hồng Hải và KwaZulu-Natal ở phía tây đến Nhật Bản và Fiji ở phía đông. Trong hầu hết phạm vi phân bố của nó, tôm hùm bông bị đánh bắt bằng lao xiên hoặc lưới, trong khi ở Đông Bắc Australia, khai thác tôm hùm bông làm thủy sản thương mại đã tồn tại từ năm 1966 và thu hoạch các loài được quy định bởi cơ quan Great Barrier Reef Marine Park Authority.",
+											"type": "text"
+										},
+										{
+											"key": "predict_id",
+											"value": "31",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "OK",
+											"type": "text"
+										},
+										{
+											"key": "animal_type_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "conservation_status_id",
+											"value": "4",
+											"type": "text"
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "images_delete",
+											"value": "1-2-3",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{HostRAP}}/admin/updateAnimalRedListEx",
+									"host": [
+										"{{HostRAP}}"
+									],
+									"path": [
+										"admin",
+										"updateAnimalRedListEx"
 									]
 								}
 							},
