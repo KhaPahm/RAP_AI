@@ -18,9 +18,9 @@ var watcher = chokidar.watch("./src/backup/daily/RAP_AI", {ignored: /^\./, persi
 watcher
   .on('add', async function(localPath) {
 	// console.log(localPath);
-	// var flieName = path.parse(localPath);
-	// var filePath = path.join(flieName.dir, flieName.base);
-	// SendingMailAttachment(flieName.base, filePath);
+	var flieName = path.parse(localPath);
+	var filePath = path.join(flieName.dir, flieName.base);
+	SendingMailAttachment(flieName.base, filePath);
   })
   .on('error', function(error) {console.error('Error happened', error);})
 
