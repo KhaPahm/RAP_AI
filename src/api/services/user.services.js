@@ -9,7 +9,11 @@ import { SendingMail } from "./mail.services.js";
 import { UpdateAvt, UploadImage } from "./cloudinary.services.js";
 import { Status } from "../interfaces/enum.interfaces.js";
 import passport from "passport";
-
+import fs from "fs";
+import { fileURLToPath } from 'url';
+import { dirname } from "path";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export async function Login(userName = "", password = "", isMobile = false) {
 	const _userInfor = await UserInfor.Login(userName, password, isMobile);
@@ -36,7 +40,10 @@ export async function ReSendOTP(userName = "", email = "") {
 	if(_resultResend.resultCode == ResultCode.Success) 
 	{
 		//Gửi mail xác thực
-		const resultEmailSending = await SendingMail(email, "Verify account", `Your OTP is: ${_resultResend.data}`, userName);
+		var template = await fs.readFileSync(__dirname + "/../../static/static_mail_format_OTP.html", "utf8");
+        template = template.replace("[0000]", _resultResend.data);
+
+		const resultEmailSending = await SendingMail(email, "Verify account", template);
 		//Nếu gửi mail thành công
 		if(resultEmailSending == ResultCode.Success) {
 			//Nếu gủi mail khoogn thành công thì xóa mã OTP trong db
@@ -62,7 +69,11 @@ export async function Register(userName = "", password = "", email = "", dayOfBi
 	if(resultRegister.resultCode == ResultCode.Success) 
 	{
 		//Gửi mail xác thực
-		const resultEmailSending = await SendingMail(email, "Verify account", `Your OTP is: ${resultRegister.data.otp}`, userName);
+		//resultRegister.data.otp
+		var template = await fs.readFileSync(__dirname + "/../../static/static_mail_format_OTP.html", "utf8");
+        template = template.replace("[0000]", resultRegister.data.otp);
+
+		const resultEmailSending = await SendingMail(email, "Verify account", template);
 		//Nếu gửi mail thành công
 		if(resultEmailSending.resultCode != ResultCode.Success) {
 			//Nếu gủi mail khoogn thành công thì xóa mã OTP trong db
@@ -108,7 +119,12 @@ export async function CreateOfficerAccount(userName = "", email = "", dayOfBirth
 	if(resultRegister.resultCode == ResultCode.Success) 
 	{
 		//Gửi mail xác thực
-		const resultEmailSending = await SendingMail(email, "Account information", `Hi ${fullName}, <br> Welcome to RAP system, your new account was registed by this email. Here is your account information: <br> <ul> <li>User name: ${resultRegister.data.userName}</li> <li>Password: <b>${resultRegister.data.password}</b></li> </ul><br><i>This is a private infomation, don't share for anyone!</i>`, userName);
+		var template = await fs.readFileSync(__dirname + "/../../static/static_mail_format_NewAccount.html", "utf8");
+        template = template.replace("[username]", resultRegister.data.userName);
+        template = template.replace("[password]", resultRegister.data.password);
+        template = template.replace("[fullName]", fullName);
+
+		const resultEmailSending = await SendingMail(email, "Account information", template);
 		//Nếu gửi mail thành công
 		if(resultEmailSending.resultCode != ResultCode.Success) {
 			//Nếu gủi mail khoogn thành công thì xóa mã OTP trong db
